@@ -14,7 +14,10 @@ const Home = () => {
             <Groups/>
             <BottomBtns/>
           </div>
-          <div className='min-w-[950px] overflow-auto h-full'>
+          <div className='w-[955px] overflow-auto h-full flex flex-col gap-5'>
+            <Server name='Server 1' ip='237.84.2.178' domain='server1.com' isRunning={true} uptime='3 days ago' type='Production' cpuUsage={30} availMemory={1000} usedMemory={1000} totalMemory={2000} platform='Linux' environment='NodeJS'/>
+            <Server name='Server 1' ip='237.84.2.178' domain='server1.com' isRunning={true} uptime='3 days ago' type='Production' cpuUsage={30} availMemory={1000} usedMemory={1000} totalMemory={2000} platform='Linux' environment='NodeJS'/>
+            <Server name='Server 1' ip='237.84.2.178' domain='server1.com' isRunning={true} uptime='3 days ago' type='Production' cpuUsage={30} availMemory={1000} usedMemory={1000} totalMemory={2000} platform='Linux' environment='NodeJS'/>
             <Server name='Server 1' ip='237.84.2.178' domain='server1.com' isRunning={true} uptime='3 days ago' type='Production' cpuUsage={30} availMemory={1000} usedMemory={1000} totalMemory={2000} platform='Linux' environment='NodeJS'/>
           </div>
         </div>

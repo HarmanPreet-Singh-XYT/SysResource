@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { CircularProgressbar,buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 interface props{
@@ -17,8 +17,36 @@ interface props{
     environment:string
 }
 const Server = ({name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment}:props) => {
-  return (
-    <div className='h-[335px] w-[940px] border-[1px] border-black rounded-[10px] overflow-hidden'>
+    const [popup, setpopup] = useState({delete:false,modify:false});
+    const openPopup = (type:string) => {
+        switch (type) {
+            case 'delete':
+                setpopup({delete:true,modify:false});
+                break;
+            case 'modify':
+                setpopup({delete:false,modify:true});
+                break;
+            case 'close':
+                setpopup({delete:false,modify:false});
+                break;
+        }
+    }
+    return (
+    <div className='min-h-[335px] w-[940px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
+        {(popup.delete || popup.modify) &&
+            <div className='absolute h-full w-full bg-black opacity-60'></div>
+        }
+        {popup.delete && 
+        (<div className='absolute z-20 top-0 bottom-0 left-0 right-0 self-center mx-auto w-[400px] h-[140px] bg-black border-[1px] border-white rounded-[10px] flex flex-col items-center justify-between'>
+            <div className='h-[60%] flex justify-center items-center'>
+                <h1 className='text-white font-bold text-[16px]'>Are you sure you want to delete this server?</h1>
+            </div>
+            <div className='h-[40%] w-full flex justify-evenly'>
+                <button onClick={() => openPopup('close')} className='w-[120px] h-[40px] bg-white font-bold text-black rounded-[10px] hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Cancel</button>
+                <button className='w-[120px] h-[40px] bg-white font-bold text-black rounded-[10px] hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Delete</button>
+            </div>
+        </div>)
+        }
         <div className='w-full h-[85%] bg-black flex'>
             <div className='w-[40%] h-full px-8 flex flex-col justify-evenly'>
                 <div>
@@ -89,16 +117,16 @@ const Server = ({name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedM
             </div>
         </div>
         <div className='w-full h-[15%] flex'>
-            <button className='w-[40%] h-full flex justify-center items-center'>
-                <h1 className='text-center font-bold'>View Details</h1>
+            <button className='w-[40%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+                View Details
             </button>
             <div className='w-[1px] bg-black h-full'></div>
-            <button className='w-[20%] h-full flex justify-center items-center'>
-                <h1 className='text-center font-bold'>Modify</h1>
+            <button className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+                Modify
             </button>
             <div className='w-[1px] bg-black h-full'></div>
-            <button className='w-[40%] h-full flex justify-center items-center'>
-                <h1 className='text-center font-bold'>Remove</h1>
+            <button onClick={()=>openPopup('delete')} className='w-[40%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+                Remove
             </button>
         </div>
     </div>
