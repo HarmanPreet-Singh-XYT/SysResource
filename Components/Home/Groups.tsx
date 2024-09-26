@@ -1,5 +1,6 @@
 'use client'
-import React, { useState } from 'react'
+import { useData } from '@/Helpers/Data'
+import React, { useRef, useState } from 'react'
 const RicycleBin = ()=>{
     return (
         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -9,58 +10,88 @@ const RicycleBin = ()=>{
     )
 }
 const Groups = () => {
-    const array = ['South East Asia','Middle-East','Europe','North America','South America','Africa','Australia'];
-    const [selectedGroup, setselectedGroup] = useState({groupID:0,groupName:''});
-    const [popup, setpopup] = useState({delete:true,modify:false});
-    const openPopup = (type:string,groupID:number,groupName:string) => {
-        setselectedGroup({groupID,groupName});
+    const {groups,addGroup,updateGroup,removeGroup,selectedGroupID,setGroupID} = useData();
+    const selectedGroupName = useRef('');
+    const [popup, setpopup] = useState({delete:false,modify:false,create:false});
+    const openPopup = (type:string,groupID?:number,groupName?:string) => {
+        if(groupID && groupName) {
+            setGroupID(groupID);
+            selectedGroupName.current = groupName;
+        };
         switch (type) {
             case 'delete':
-                setpopup({delete:true,modify:false});
+                setpopup({delete:true,modify:false,create:false});
                 break;
             case 'modify':
-                setpopup({delete:false,modify:true});
+                setpopup({delete:false,modify:true,create:false});
+                break;
+            case 'create':
+                setpopup({delete:false,modify:false,create:true});
                 break;
             case 'close':
-                setpopup({delete:false,modify:false});
+                setpopup({delete:false,modify:false,create:false});
                 break;
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const createGroup = (e:any)=>{
+        e.preventDefault();
+        const groupName = e.target.groupName.value;
+        addGroup({id:Math.floor(Math.random() * 10000),name:groupName});
+        setpopup({delete:false,modify:false,create:false});
+    };
+    const deleteGroup = ()=>{
+        setGroupID(0);
+        removeGroup(selectedGroupID);
+        setpopup({delete:false,modify:false,create:false});
+    }
     return (
     <div className='w-[320px] h-auto min-h-[425px] max-h-[425px] overflow-hidden relative border-[1px] border-[#CCCCCC] rounded-[10px] px-5 py-4'>
-        {(popup.delete || popup.modify) &&
-            <div className='absolute h-full w-full z-10 left-0 top-0 bg-black opacity-60'></div>
+        {(popup.delete || popup.modify || popup.create) &&
+            <div onClick={()=>openPopup('close')} className='absolute h-full w-full z-10 left-0 top-0 bg-black opacity-60'></div>
         }
         {popup.delete && 
         (<div className='absolute z-20 top-0 left-0 right-0 border-[1px] overflow-hidden border-[#000000] bottom-0 mx-auto self-center h-[150px] w-[95%] rounded-[10px]'>
             <div className='h-[80%] w-full bg-black flex justify-evenly items-center flex-col'>
-                <h1 className='text-white font-semibold text-[14px] px-4 text-center'>Are you sure, you want to delete Group - {selectedGroup.groupName}?</h1>
-                <h2 className='text-white font-medium text-[12px] px-2 text-center'>Deleting group will change existing group members to Group All.</h2>
+                <h1 className='text-white font-semibold text-[14px] px-4 text-center'>Are you sure, you want to delete Group - {selectedGroupName.current}?</h1>
+                <h2 className='text-white font-medium text-[12px] px-4 text-center'>Deleting group will change existing group members to Group All.</h2>
             </div>
             <div className='h-[20%] w-full bg-white flex'>
-                <button className='w-[50%] h-full font-bold text-sm hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]' onClick={()=>openPopup('close',123,'abc')}>Cancel</button>
+                <button className='w-[50%] h-full font-bold text-sm hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]' onClick={()=>openPopup('close')}>Cancel</button>
                 <div className='h-full w-[1px] bg-black'></div>
-                <button className='w-[50%] h-full font-bold text-sm hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Delete</button>
+                <button onClick={deleteGroup} className='w-[50%] h-full font-bold text-sm hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Delete</button>
             </div>
         </div>)}
+        {popup.create && 
+        (<form onSubmit={createGroup} className='absolute z-20 top-0 left-0 right-0 border-[1px] overflow-hidden border-[#000000] bottom-0 mx-auto self-center h-[150px] w-[95%] rounded-[10px]'>
+            <div className='h-[80%] w-full bg-black flex justify-evenly flex-col'>
+                <label className='text-white font-semibold text-[14px] px-4 text-start'>Group Name:</label>
+                <input required maxLength={50} placeholder='Enter Group Name' name='groupName' type='text' className='h-[35px] w-[90%] mx-auto rounded-[10px] px-2 bg-white border-[1px] border-[#000000] text-black text-[14px] outline-none focus:outline-none focus:border-[#000000]'/>
+            </div>
+            <div className='h-[20%] w-full bg-white flex'>
+                <button type='button' className='w-[50%] h-full font-bold text-sm hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]' onClick={()=>openPopup('close')}>Cancel</button>
+                <div className='h-full w-[1px] bg-black'></div>
+                <button type='submit' className='w-[50%] h-full font-bold text-sm hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Create</button>
+            </div>
+        </form>)}
         
         <h1 className='font-bold'>Groups</h1>
         <div className='flex flex-col gap-2 mt-3 h-[275px] overflow-auto'>
-            <button className='w-full font-bold text-white min-h-[38px] flex bg-black rounded-[10px] items-center px-4'>
+            <button onClick={()=>setGroupID(0)} className={`w-full font-bold min-h-[38px] flex ${selectedGroupID===0 ? 'bg-black text-white' : 'border-[1px] border-[#CCCCCC] text-black'} rounded-[10px] items-center px-4`}>
                 All
             </button>
-            {array.map((item,index) => (
-                <div key={index} className='w-full min-h-[38px] justify-between border-[1px] border-[#CCCCCC] rounded-[10px] flex'>
-                    <button className='w-[80%] font-medium text-black text-[14px] min-h-[38px] flex items-center px-4'>
-                        {item}
+            {groups.map((item) => (
+                <div key={item.id} className={`w-full min-h-[38px] justify-between border-[1px] ${selectedGroupID===item.id ? 'bg-black' : 'border-[#CCCCCC]'} rounded-[10px] flex`}>
+                    <button onClick={()=>setGroupID(item.id)} className={`w-[80%] font-medium ${selectedGroupID===item.id ? 'text-white' : 'text-black'} text-[14px] min-h-[38px] flex items-center px-4`}>
+                        {item.name}
                     </button>
-                    <button onClick={()=>openPopup('delete',index,item)} className='w-[20%] font-medium text-black text-[14px] min-h-[38px] flex justify-end items-center px-4'>
+                    <button onClick={()=>openPopup('delete',item.id,item.name)} className='w-[20%] font-medium text-black text-[14px] min-h-[38px] flex justify-end items-center px-4'>
                         <RicycleBin/>
                     </button>
                 </div>
             ))}
         </div>
-        <button className='w-full font-bold text-black text-[14px] min-h-[38px] flex border-[1px] border-[#000000] justify-center mt-10 rounded-[10px] items-center px-4'>
+        <button onClick={()=>openPopup('create')} className='w-full font-bold text-black text-[14px] min-h-[38px] flex border-[1px] border-[#000000] justify-center mt-10 rounded-[10px] items-center px-4'>
             Create a Group
         </button>
     </div>

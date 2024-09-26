@@ -34,7 +34,7 @@ const Server = ({name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedM
     return (
     <div className='min-h-[335px] w-[940px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
         {(popup.delete || popup.modify) &&
-            <div className='absolute h-full w-full bg-black opacity-60'></div>
+            <div onClick={() => openPopup('close')} className='absolute h-full w-full bg-black opacity-60'></div>
         }
         {popup.delete && 
         (<div className='absolute z-20 top-0 bottom-0 left-0 right-0 self-center mx-auto w-[400px] h-[140px] bg-black border-[1px] border-white rounded-[10px] flex flex-col items-center justify-between'>
