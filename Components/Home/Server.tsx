@@ -1,11 +1,14 @@
 'use client'
+import useDB from '@/Controller/LocalDatabase';
+import { useData } from '@/Helpers/Data';
 import React, { useState } from 'react'
 import { CircularProgressbar,buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 interface props{
+    id:number;
     name:string,
-    ip:string,
-    domain:string,
+    ip?:string,
+    domain?:string,
     isRunning:boolean,
     uptime:string,
     type:'Production'|'Development'|'Other',
@@ -16,7 +19,9 @@ interface props{
     platform:string,
     environment:string
 }
-const Server = ({name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment}:props) => {
+const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment}:props) => {
+    const {removeServerDB} = useDB();
+    const {removeData} = useData();
     const [popup, setpopup] = useState({delete:false,modify:false});
     const openPopup = (type:string) => {
         switch (type) {
@@ -31,6 +36,11 @@ const Server = ({name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedM
                 break;
         }
     }
+    const removeServer = () => {
+        removeData(id);
+        removeServerDB(id);
+        openPopup('close');
+    }
     return (
     <div className='min-h-[335px] w-[940px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
         {(popup.delete || popup.modify) &&
@@ -43,7 +53,7 @@ const Server = ({name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedM
             </div>
             <div className='h-[40%] w-full flex justify-evenly'>
                 <button onClick={() => openPopup('close')} className='w-[120px] h-[40px] bg-white font-bold text-black rounded-[10px] hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Cancel</button>
-                <button className='w-[120px] h-[40px] bg-white font-bold text-black rounded-[10px] hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Delete</button>
+                <button onClick={removeServer} className='w-[120px] h-[40px] bg-white font-bold text-black rounded-[10px] hover:bg-black hover:text-white transition-colors duration-100 hover:border-[1px] hover:border-[#ffffff]'>Delete</button>
             </div>
         </div>)
         }

@@ -1,4 +1,5 @@
 'use client'
+import useDB from '@/Controller/LocalDatabase'
 import { useData } from '@/Helpers/Data'
 import React, { useRef, useState } from 'react'
 const RicycleBin = ()=>{
@@ -10,8 +11,9 @@ const RicycleBin = ()=>{
     )
 }
 const Groups = () => {
-    const {groups,addGroup,updateGroup,removeGroup,selectedGroupID,setGroupID} = useData();
+    const {groups,addGroup,removeGroup,selectedGroupID,setGroupID} = useData();
     const selectedGroupName = useRef('');
+    const {addGroupDB,removeGroupDB} = useDB();
     const [popup, setpopup] = useState({delete:false,modify:false,create:false});
     const openPopup = (type:string,groupID?:number,groupName?:string) => {
         if(groupID && groupName) {
@@ -37,12 +39,19 @@ const Groups = () => {
     const createGroup = (e:any)=>{
         e.preventDefault();
         const groupName = e.target.groupName.value;
-        addGroup({id:Math.floor(Math.random() * 10000),name:groupName});
+        const id = Math.floor(Math.random() * 10000);
+        addGroup({id,name:groupName,creationTime:new Date().toISOString()});
+        addGroupDB({
+            id,
+            name:groupName,
+            creationTime:new Date().toISOString()
+        })
         setpopup({delete:false,modify:false,create:false});
     };
     const deleteGroup = ()=>{
         setGroupID(0);
         removeGroup(selectedGroupID);
+        removeGroupDB(selectedGroupID);
         setpopup({delete:false,modify:false,create:false});
     }
     return (

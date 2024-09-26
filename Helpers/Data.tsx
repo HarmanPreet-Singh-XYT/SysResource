@@ -16,20 +16,24 @@ interface Data {
   usedMemory: number;
   platform: string;
   environment: string;
-  connectivityMedium: 'IP'|'Domain';
+  connectivityMedium: 'IP' | 'Domain';
   ipDomain: string;
-  groupID:number;
-  APIKey:string;
+  groupID: number;
+  APIKey: string;
+  creationTime: string;
 }
 interface Group{
   id: number;
   name: string;
+  creationTime: string;
 }
 
 // Define the type for the context value
 interface DataContextProps {
   data: Data[];
   groups:Group[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lib:any|null;
   selectedGroupID: number;
   selectedServerID: number;
   setupData: (data: Data[]) => void;
@@ -42,6 +46,8 @@ interface DataContextProps {
   removeGroup: (index: number) => void;
   setGroupID: (id: number) => void;
   setServerID: (id: number) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setLibrary: (lib:any) => void;
 }
 
 // Create a Context with a default value
@@ -57,7 +63,12 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroupID, setselectedGroupID] = useState(0);
   const [selectedServerID, setselectedServerID] = useState(0);
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [lib, setLib] = useState<any | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setLibrary = (lib:any) => {
+    setLib(lib);
+  }
   const setGroupID = (id:number) => {
     setselectedGroupID(id);
   };
@@ -94,7 +105,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   };
 
   return (
-    <DataContext.Provider value={{ data,groups,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID }}>
+    <DataContext.Provider value={{ data,groups,lib, setLibrary,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID }}>
       {children}
     </DataContext.Provider>
   );
