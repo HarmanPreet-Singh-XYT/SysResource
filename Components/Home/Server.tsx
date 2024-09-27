@@ -1,7 +1,7 @@
 'use client'
 import useDB from '@/Controller/LocalDatabase';
 import { useData } from '@/Helpers/Data';
-import React, { useState } from 'react'
+import React, {  useState } from 'react'
 import { CircularProgressbar,buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 interface props{
@@ -11,28 +11,30 @@ interface props{
     domain?:string,
     isRunning:boolean,
     uptime:string,
-    type:'Production'|'Development'|'Other',
+    type:string,
     cpuUsage:number,
     availMemory:number,
     totalMemory:number,
     usedMemory:number,
     platform:string,
     environment:string
+    setPopup:(type:string)=>void
 }
-const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment}:props) => {
+const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment,setPopup}:props) => {
     const {removeServerDB} = useDB();
-    const {removeData} = useData();
-    const [popup, setpopup] = useState({delete:false,modify:false});
+    const {removeData,setServerID} = useData();
+    const [popup, setpopup] = useState({delete:false});
+    const getPercentage = (value:number)=>{
+        const valueOutput = Math.round((value / totalMemory) * 100);
+        return (valueOutput > -1) ? valueOutput : 0;
+    }
     const openPopup = (type:string) => {
         switch (type) {
             case 'delete':
-                setpopup({delete:true,modify:false});
-                break;
-            case 'modify':
-                setpopup({delete:false,modify:true});
+                setpopup({delete:true});
                 break;
             case 'close':
-                setpopup({delete:false,modify:false});
+                setpopup({delete:false});
                 break;
         }
     }
@@ -42,8 +44,8 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
         openPopup('close');
     }
     return (
-    <div className='min-h-[335px] w-[940px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
-        {(popup.delete || popup.modify) &&
+    <div className='min-h-[335px] ml-2 min-w-[540px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
+        {(popup.delete) &&
             <div onClick={() => openPopup('close')} className='absolute h-full w-full bg-black opacity-60'></div>
         }
         {popup.delete && 
@@ -102,7 +104,7 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
                     <div>
                         <h1 className='text-white font-bold text-[16px]'>Available memory</h1>
                         <div className='w-[75px] h-[75px]'>
-                            <Progressbar percentage={availMemory*100/totalMemory}/>
+                            <Progressbar percentage={getPercentage(availMemory)}/>
                         </div>
                     </div>
                 </div>
@@ -110,7 +112,7 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
                     <div>
                         <h1 className='text-white font-bold text-[16px]'>Used memory</h1>
                         <div className='w-[75px] h-[75px]'>
-                            <Progressbar percentage={usedMemory*100/totalMemory}/>
+                            <Progressbar percentage={getPercentage(usedMemory)}/>
                         </div>
                     </div>
                     <div className='flex flex-col gap-2'>
@@ -127,11 +129,11 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
             </div>
         </div>
         <div className='w-full h-[15%] flex'>
-            <button className='w-[40%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+            <button onClick={()=>{setServerID(id);openPopup('details')}} className='w-[40%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
                 View Details
             </button>
             <div className='w-[1px] bg-black h-full'></div>
-            <button className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+            <button onClick={()=>{setServerID(id);setPopup('modify')}} className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
                 Modify
             </button>
             <div className='w-[1px] bg-black h-full'></div>

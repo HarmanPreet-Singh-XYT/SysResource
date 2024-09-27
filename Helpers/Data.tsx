@@ -9,14 +9,14 @@ interface Data {
   domain?: string;
   isRunning: boolean;
   uptime: string;
-  type: 'Production' | 'Development';
+  type: string;
   cpuUsage: number;
   availMemory: number;
   totalMemory: number;
   usedMemory: number;
   platform: string;
   environment: string;
-  connectivityMedium: 'IP' | 'Domain';
+  connectivityMedium: string;
   ipDomain: string;
   groupID: number;
   APIKey: string;

@@ -10,14 +10,14 @@ interface Data {
     domain?: string;
     isRunning: boolean;
     uptime: string;
-    type: 'Production' | 'Development';
+    type: string;
     cpuUsage: number;
     availMemory: number;
     totalMemory: number;
     usedMemory: number;
     platform: string;
     environment: string;
-    connectivityMedium: 'IP' | 'Domain';
+    connectivityMedium: string;
     ipDomain: string;
     groupID: number;
     APIKey: string;
@@ -59,11 +59,41 @@ const useDB = () => {
             lib.commit();
         }
     };
+
+    const updateServerDB = (id:number,data:Data)=>{
+        if(lib){
+            lib.update("serverData", {id}, function(row: { name: string; ip: string | undefined; domain: string | undefined; isRunning: boolean; uptime: string; type: string; cpuUsage: number; availMemory: number; totalMemory: number; usedMemory: number; platform: string; environment: string; connectivityMedium: string; ipDomain: string; groupID: number; APIKey: string; creationTime: string; }) {
+                row.name = data.name;
+                row.ip = data.ip;
+                row.domain = data.domain;
+                row.isRunning = data.isRunning;
+                row.uptime = data.uptime;
+                row.type = data.type;
+                row.cpuUsage = data.cpuUsage;
+                row.availMemory = data.availMemory;
+                row.totalMemory = data.totalMemory;
+                row.usedMemory = data.usedMemory;
+                row.platform = data.platform;
+                row.environment = data.environment;
+                row.connectivityMedium = data.connectivityMedium;
+                row.ipDomain = data.ipDomain;
+                row.groupID = data.groupID;
+                row.APIKey = data.APIKey;
+                row.creationTime = data.creationTime;
+            
+                // the update callback function returns to the modified record
+                return row;
+            });
+            lib.commit();
+        }
+    }
+
     return {
         addGroupDB,
         addServerDB,
         removeGroupDB,
-        removeServerDB
+        removeServerDB,
+        updateServerDB
     };
 };
 
