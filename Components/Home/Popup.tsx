@@ -39,7 +39,7 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
         setPopup('close');
     }
   return (
-    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-[600px] h-[400px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-4 shadow-lg px-6'>
+    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-[650px] h-[450px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-8 shadow-lg px-10'>
           <div className='flex h-[85%] justify-between'>
             <div className='flex flex-col justify-evenly h-full'>
               <div className='flex flex-col'>
@@ -209,7 +209,7 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
         setPopup('close');
     }
   return (
-    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-[600px] h-[400px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-4 shadow-lg px-6'>
+    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-[650px] h-[450px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-8 shadow-lg px-10'>
           <div className='flex h-[85%] justify-between'>
             <div className='flex flex-col justify-evenly h-full'>
               <div className='flex flex-col'>
@@ -292,5 +292,89 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
         </form>
   )
 }
+export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
+  return (
+    <div className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[610px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
+      <label className='font-bold text-sm'>Use this key for API Access Key</label>
+      <div className='w-full mt-2 items-center h-[40px] px-2 rounded-[10px] border-[1px] flex justify-between border-[#CCCCCC]'>
+        <p className='font-medium text-sm'>Generate key</p>
+        <button></button>
+      </div>
+      <button className='w-[100px] mt-2 self-center h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Generate</button>
+      <h3 className='font-bold mt-4 text-sm'>Import data</h3>
+      <div className='w-[60%] h-[100px] mt-2 mx-auto flex flex-col justify-evenly border-[1px] border-[#CCCCCC] rounded-[10px]'>
+        <button className='w-[80%] h-[30px] font-medium text-sm rounded-[10px] flex items-center justify-center border-[1px] mx-auto border-[#CCCCCC]'>
+          Choose File
+        </button>
+        <button className='w-[100px] text-sm mt-2 self-center h-[35px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Import</button>
+      </div>
+      <h3 className='font-bold mt-4 text-sm'>Export data</h3>
+      <div className='w-[75%] px-4 h-[120px] mt-2 mx-auto flex flex-col justify-evenly border-[1px] border-[#CCCCCC] rounded-[10px]'>
+        <label className='text-sm font-medium'>File Name</label>
+        <input placeholder='backup' className='w-full h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] mx-auto border-[#CCCCCC]'/>
+        <button className='w-[100px] mt-2 self-center text-sm h-[35px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Export</button>
+      </div>
+      <div className='flex justify-between mt-2'>
+        <div>
+          <label className='text-sm font-bold'>API Interval</label>
+          <input placeholder='ms' className='w-[100px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
+        </div>
+        <div>
+          <label className='text-sm font-bold'>API History Limit</label>
+          <input placeholder='100' className='w-[100px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
+        </div>
+      </div>
+      <div className='w-full justify-evenly flex mt-4'>
+        <button onClick={()=>setPopup('close')} className='w-[100px] text-sm h-[40px] font-bold text-black text-[16px] hover:bg-black hover:text-white border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Cancel</button>
+        <button className='w-[100px] text-sm h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Apply</button>
+      </div>
+    </div>
+  )
+}
 
+export const Alerts = ({setPopup}:{setPopup:(type:string)=>void})=>{
+
+  return (
+    <div className='absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[250px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
+      <div className='flex justify-between items-center'>
+        <h3 className='font-bold'>Alerts</h3>
+        <label className="switch">
+          <input type="checkbox"/>
+          <span className="slider round"></span>
+        </label>
+      </div>
+      <div className='flex justify-between items-center'>
+        <h3 className='font-medium text-sm'>Server Down</h3>
+        <label className="switch">
+          <input type="checkbox"/>
+          <span className="slider round"></span>
+        </label>
+      </div>
+      <div className='flex justify-between items-center'>
+        <h3 className='font-medium text-sm'>Threshold Alert</h3>
+        <label className="switch">
+          <input type="checkbox"/>
+          <span className="slider round"></span>
+        </label>
+      </div>
+      <ul className='flex flex-col gap-2'>
+        <div className='flex justify-between items-center'>
+          <li className='list-item text-sm font-medium'>CPU Threshold</li>
+          <div className='flex'>
+            <input type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
+            <label className='ml-1 font-bold text-lg'>%</label>
+          </div>
+        </div>
+        <div className='flex justify-between items-center'>
+          <li className='list-item text-sm font-medium'>Memory Threshold</li>
+          <div className='flex'>
+            <input type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
+            <label className='ml-1 font-bold text-lg'>%</label>
+          </div>
+        </div>
+      </ul>
+      <button onClick={()=>setPopup('close')} className='w-[100px] text-sm mt-2 self-center py-1 font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Close</button>
+    </div>
+  );
+}
 export default CreatePopup

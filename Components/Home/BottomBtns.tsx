@@ -9,6 +9,9 @@ const BottomBtns = ({setPopup}:{setPopup:(type:string)=>void}) => {
         <button onClick={()=>setPopup('settings')} className='w-[280px] transition-colors duration-100 font-bold text-black text-[14px] hover:bg-black hover:text-white mx-auto min-h-[38px] flex border-[1px] border-[#000000] justify-center mt-2 rounded-[10px] items-center px-4'>
             Settings
         </button>
+        <button onClick={()=>setPopup('alerts')} className='w-[280px] transition-colors duration-100 font-bold text-black text-[14px] hover:bg-black hover:text-white mx-auto min-h-[38px] flex border-[1px] border-[#000000] justify-center mt-2 rounded-[10px] items-center px-4'>
+            Alerts Config
+        </button>
     </div>
   )
 }

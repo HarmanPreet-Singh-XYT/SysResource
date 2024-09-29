@@ -11,7 +11,6 @@ const Navbar = () => {
         <div className='xl:flex hidden items-center gap-8'>
             <Link className='font-bold' href={'/'}>Cloud</Link>
             <Link className='font-bold' href={'/'}>Docs</Link>
-            <Link className='font-bold' href={'/'}>Alerts</Link>
             <Link className='font-bold' href={'/'}>Get Started</Link>
         </div>
     </nav>
