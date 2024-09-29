@@ -4,7 +4,7 @@ import Navbar from './Home/Navbar'
 import Groups from './Home/Groups'
 import BottomBtns from './Home/BottomBtns'
 import Server from './Home/Server'
-import localStoragedb from 'localStoragedb';
+import localStorageDB from './localStorage/localStorageDB';
 import { useData } from '@/helpers/Data'
 import CreatePopup, { Alerts, ModifyPopup, Settings } from './Home/Popup'
 const Home = () => {
@@ -12,7 +12,7 @@ const Home = () => {
   const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false});
   useEffect(() => {
     if (typeof window !== 'undefined') {
-        const localDB = new localStoragedb('library');
+        const localDB = new localStorageDB('library');
         setLibrary(localDB);
 
         // Check the database
