@@ -28,7 +28,7 @@ const Home = () => {
         db.createTable('serverData', [
             'id', 'name', 'ip', 'domain', 'isRunning', 'uptime', 'type',
             'cpuUsage', 'availMemory', 'totalMemory', 'usedMemory', 'platform',
-            'environment', 'connectivityMedium', 'ipDomain', 'groupID', 'APIKey', 'creationTime'
+            'environment', 'connectivityMedium', 'ipDomain', 'groupID', 'APIKey','connectionType','urlPath', 'creationTime'
         ]);
 
         // Commit changes

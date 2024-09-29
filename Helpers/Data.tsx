@@ -20,6 +20,8 @@ interface Data {
   ipDomain: string;
   groupID: number;
   APIKey: string;
+  urlPath:string;
+  connectionType:string;
   creationTime: string;
 }
 interface Group{
@@ -32,6 +34,7 @@ interface Group{
 interface DataContextProps {
   data: Data[];
   groups:Group[];
+  dataLoaded: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lib:any|null;
   selectedGroupID: number;
@@ -48,6 +51,7 @@ interface DataContextProps {
   setServerID: (id: number) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setLibrary: (lib:any) => void;
+  setDataLoaded: (bool:boolean) => void;
 }
 
 // Create a Context with a default value
@@ -65,6 +69,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [selectedServerID, setselectedServerID] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [lib, setLib] = useState<any | null>(null);
+  const [dataLoaded, setdataLoaded] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setLibrary = (lib:any) => {
     setLib(lib);
@@ -103,9 +108,12 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const removeGroup = (id: number) => {
     setGroups(prevData => prevData.filter((each) => each.id !== id));
   };
+  const setDataLoaded = (bool:boolean)=>{
+    setdataLoaded(bool);
+  }
 
   return (
-    <DataContext.Provider value={{ data,groups,lib, setLibrary,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID }}>
+    <DataContext.Provider value={{ data,groups,lib,dataLoaded, setLibrary,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
       {children}
     </DataContext.Provider>
   );

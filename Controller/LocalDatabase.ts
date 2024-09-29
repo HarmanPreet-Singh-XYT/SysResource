@@ -21,6 +21,8 @@ interface Data {
     ipDomain: string;
     groupID: number;
     APIKey: string;
+    urlPath:string;
+    connectionType:string;
     creationTime: string;
 }
 
@@ -62,7 +64,7 @@ const useDB = () => {
 
     const updateServerDB = (id:number,data:Data)=>{
         if(lib){
-            lib.update("serverData", {id}, function(row: { name: string; ip: string | undefined; domain: string | undefined; isRunning: boolean; uptime: string; type: string; cpuUsage: number; availMemory: number; totalMemory: number; usedMemory: number; platform: string; environment: string; connectivityMedium: string; ipDomain: string; groupID: number; APIKey: string; creationTime: string; }) {
+            lib.update("serverData", {id}, function(row: { name: string; ip: string | undefined; domain: string | undefined; isRunning: boolean; uptime: string; type: string; cpuUsage: number; availMemory: number; totalMemory: number; usedMemory: number; platform: string; environment: string; connectivityMedium: string; ipDomain: string; groupID: number; APIKey: string; connectionType:string; urlPath:string; creationTime: string; }) {
                 row.name = data.name;
                 row.ip = data.ip;
                 row.domain = data.domain;
@@ -79,6 +81,8 @@ const useDB = () => {
                 row.ipDomain = data.ipDomain;
                 row.groupID = data.groupID;
                 row.APIKey = data.APIKey;
+                row.connectionType = data.connectionType;
+                row.urlPath = data.urlPath;
                 row.creationTime = data.creationTime;
             
                 // the update callback function returns to the modified record
