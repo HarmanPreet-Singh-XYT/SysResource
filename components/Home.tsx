@@ -4,7 +4,7 @@ import Navbar from './Home/Navbar'
 import Groups from './Home/Groups'
 import BottomBtns from './Home/BottomBtns'
 import Server from './Home/Server'
-import localStoragedb from 'localStorageDB';
+import localStoragedb from 'localStoragedb';
 import { useData } from '@/helpers/Data'
 import CreatePopup, { Alerts, ModifyPopup, Settings } from './Home/Popup'
 const Home = () => {
