@@ -12,7 +12,7 @@ const Home = () => {
   const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false});
   useEffect(() => {
     if (typeof window !== 'undefined') {
-        const localDB = new localStorageDB('library', localStorage);
+        const localDB = new localStorageDB('library');
         setLibrary(localDB);
 
         // Check the database
