@@ -1,6 +1,6 @@
 'use client'
-import useDB from '@/Controller/LocalDatabase';
-import { useData } from '@/Helpers/Data';
+import useDB from '@/controller/LocalDatabase';
+import { useData } from '@/helpers/Data';
 import React, {  useState } from 'react'
 import { CircularProgressbar,buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';

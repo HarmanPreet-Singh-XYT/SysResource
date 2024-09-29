@@ -1,6 +1,6 @@
 'use client'
-import useDB from '@/Controller/LocalDatabase';
-import { useData } from '@/Helpers/Data';
+import useDB from '@/controller/LocalDatabase';
+import { useData } from '@/helpers/Data';
 import React, { useEffect, useState } from 'react'
 
 const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {

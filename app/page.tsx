@@ -1,5 +1,5 @@
-import Home from '@/Components/Home'
-import { DataProvider } from '@/Helpers/Data'
+import Home from '@/components/Home'
+import { DataProvider } from '@/helpers/Data'
 import React from 'react'
 
 const page = () => {

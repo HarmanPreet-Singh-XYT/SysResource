@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useData } from '@/Helpers/Data';
+import { useData } from '@/helpers/Data';
 
 // Define interfaces
 interface Data {
