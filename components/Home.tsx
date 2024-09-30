@@ -4,11 +4,12 @@ import Navbar from './Home/Navbar'
 import Groups from './Home/Groups'
 import BottomBtns from './Home/BottomBtns'
 import Server from './Home/Server'
-import localStorageDB from './localStorage/localStorageDB';
+import localStorageDB from 'localStorageDB';
 import { useData } from '@/helpers/Data'
 import CreatePopup, { Alerts, ModifyPopup, Settings } from './Home/Popup'
+import APIUpdate from './Home/APIUpdate'
 const Home = () => {
-  const {setLibrary,setupData,setupGroup,data,selectedGroupID} = useData();
+  const {setLibrary,setupData,setupGroup,data,selectedGroupID,setDataLoaded} = useData();
   const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false});
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -39,6 +40,7 @@ const Home = () => {
       setupData(serverData);
       setupGroup(groupData);
     }
+    setDataLoaded(true);
   };
   const setPopupType=(type:string)=>{
     switch (type) {
@@ -64,6 +66,7 @@ const Home = () => {
   }
   return (
     <div className='flex justify-center h-screen w-full'>
+      <APIUpdate/>
       <div className='w-[95%] 2xl:w-[70%] h-full relative'>
         <Navbar/>
         {popup.create && <CreatePopup setPopup={setPopupType}/>}

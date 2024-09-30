@@ -21,17 +21,17 @@ interface SystemInfo {
     type: string;
     machine: string;
     architecture: string;
+    environment:string;
 }
 
 // Function to fetch system info using POST
 export default async function fetchSystemInfo(apiUrl: string, path: string, key: string): Promise<ApiResponse> {
     try {
-        const response = await fetch(`${apiUrl}/${path}`, {
-            method: 'POST',
+        const response = await fetch(`${apiUrl}/${path}/${key}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ key }) // Send the key in the request body
         });
 
         if (!response.ok) {
