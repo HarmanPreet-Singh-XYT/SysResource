@@ -1,8 +1,10 @@
 'use client'
 import useDB from '@/controller/LocalDatabase';
+import { useThreshold } from '@/helpers/Alerts';
 import { useData } from '@/helpers/Data';
+import { useSettings } from '@/helpers/Settings';
 import React, { useEffect, useState } from 'react'
-
+import { toast } from 'react-toastify';
 const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
     const {groups,addData} = useData();
     const {addServerDB} = useDB();
@@ -34,7 +36,6 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
             connectionType:e.target.connectionType.value,
             creationTime:new Date().toISOString()
         }
-        console.log(data);
         addData(data);
         addServerDB(data);
         setPopup('close');
@@ -341,16 +342,58 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
         </form>
   )
 }
+
+const Clipboard = ()=>{
+  return(
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+    </svg>
+  )
+}
+
+function generateRandomKey(length:number) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomKey = '';
+  
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomKey += characters[randomIndex];
+  }
+  
+  return randomKey;
+}
 export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
+  const [generatedKey, setgeneratedKey] = useState('Generate key');
+  const {apiHistoryLimit,apiInterval,setApiHistoryLimit,setApiInterval,maxAPIFailure,setmaxAPIFailure} = useSettings();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setParameters = (e:any)=>{
+    e.preventDefault();
+    setApiHistoryLimit(e.target.historyLimit.value);
+    setApiInterval(e.target.interval.value);
+    setmaxAPIFailure(e.target.maxretries.value);
+  }
+  const copyToClipboard = (text:string)=>{
+    navigator.clipboard.writeText(text);
+    toast.success('Copied to clipboard', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      });
+  }
   return (
-    <div className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[610px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
+    <form className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[300px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
       <label className='font-bold text-sm'>Use this key for API Access Key</label>
       <div className='w-full mt-2 items-center h-[40px] px-2 rounded-[10px] border-[1px] flex justify-between border-[#CCCCCC]'>
-        <p className='font-medium text-sm'>Generate key</p>
-        <button></button>
+        <p className='font-medium text-sm'>{generatedKey}</p>
+        <button type='button' onClick={()=>copyToClipboard(generatedKey)} className='w-[30px] h-[40px]'><Clipboard/></button>
       </div>
-      <button className='w-[100px] mt-2 self-center h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Generate</button>
-      <h3 className='font-bold mt-4 text-sm'>Import data</h3>
+      <button type='button' onClick={()=>setgeneratedKey(generateRandomKey(30))} className='w-[100px] mt-2 self-center h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Generate</button>
+      {/* <h3 className='font-bold mt-4 text-sm'>Import data</h3>
       <div className='w-[60%] h-[100px] mt-2 mx-auto flex flex-col justify-evenly border-[1px] border-[#CCCCCC] rounded-[10px]'>
         <button className='w-[80%] h-[30px] font-medium text-sm rounded-[10px] flex items-center justify-center border-[1px] mx-auto border-[#CCCCCC]'>
           Choose File
@@ -362,47 +405,51 @@ export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
         <label className='text-sm font-medium'>File Name</label>
         <input placeholder='backup' className='w-full h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] mx-auto border-[#CCCCCC]'/>
         <button className='w-[100px] mt-2 self-center text-sm h-[35px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Export</button>
-      </div>
+      </div> */}
       <div className='flex justify-between mt-2'>
         <div>
           <label className='text-sm font-bold'>API Interval</label>
-          <input placeholder='ms' className='w-[100px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
+          <input defaultValue={apiInterval} type='number' placeholder='ms' name='interval' className='w-[100px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
+        </div>
+        <div>
+          <label className='text-sm font-bold'>Max Retries</label>
+          <input defaultValue={maxAPIFailure} type='number' placeholder='5' name='maxretries' className='w-[50px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
         </div>
         <div>
           <label className='text-sm font-bold'>API History Limit</label>
-          <input placeholder='100' className='w-[100px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
+          <input defaultValue={apiHistoryLimit} type='number' placeholder='100' name='limit' className='w-[100px] h-[40px] px-2 text-sm rounded-[10px] flex items-center justify-center border-[1px] border-[#CCCCCC]'/>
         </div>
       </div>
       <div className='w-full justify-evenly flex mt-4'>
-        <button onClick={()=>setPopup('close')} className='w-[100px] text-sm h-[40px] font-bold text-black text-[16px] hover:bg-black hover:text-white border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Cancel</button>
-        <button className='w-[100px] text-sm h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Apply</button>
+        <button type='button' onClick={()=>setPopup('close')} className='w-[100px] text-sm h-[40px] font-bold text-black text-[16px] hover:bg-black hover:text-white border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Cancel</button>
+        <button type='submit' onClick={setParameters} className='w-[100px] text-sm h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Apply</button>
       </div>
-    </div>
+    </form>
   )
 }
 
 export const Alerts = ({setPopup}:{setPopup:(type:string)=>void})=>{
-
+  const {alertsEnabled, setAlertsEnabled, customAlert, setCustomAlert, cpuThreshold, setCpuThreshold, memoryThreshold, setMemoryThreshold, serverDown, setServerDown} = useThreshold();
   return (
     <div className='absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[250px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
       <div className='flex justify-between items-center'>
         <h3 className='font-bold'>Alerts</h3>
         <label className="switch">
-          <input type="checkbox"/>
+          <input defaultChecked={alertsEnabled} onClick={()=>setAlertsEnabled(!alertsEnabled)} type="checkbox"/>
           <span className="slider round"></span>
         </label>
       </div>
       <div className='flex justify-between items-center'>
         <h3 className='font-medium text-sm'>Server Down</h3>
         <label className="switch">
-          <input type="checkbox"/>
+          <input defaultChecked={serverDown} onClick={()=>setServerDown(!serverDown)} type="checkbox"/>
           <span className="slider round"></span>
         </label>
       </div>
       <div className='flex justify-between items-center'>
         <h3 className='font-medium text-sm'>Threshold Alert</h3>
         <label className="switch">
-          <input type="checkbox"/>
+          <input defaultChecked={customAlert} onClick={()=>setCustomAlert(!customAlert)} type="checkbox"/>
           <span className="slider round"></span>
         </label>
       </div>
@@ -410,14 +457,14 @@ export const Alerts = ({setPopup}:{setPopup:(type:string)=>void})=>{
         <div className='flex justify-between items-center'>
           <li className='list-item text-sm font-medium'>CPU Threshold</li>
           <div className='flex'>
-            <input type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
+            <input defaultValue={cpuThreshold} onChange={(e)=>setCpuThreshold(parseInt(e.target.value))} type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
             <label className='ml-1 font-bold text-lg'>%</label>
           </div>
         </div>
         <div className='flex justify-between items-center'>
           <li className='list-item text-sm font-medium'>Memory Threshold</li>
           <div className='flex'>
-            <input type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
+            <input defaultValue={memoryThreshold} onChange={(e)=>setMemoryThreshold(parseInt(e.target.value))} type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
             <label className='ml-1 font-bold text-lg'>%</label>
           </div>
         </div>

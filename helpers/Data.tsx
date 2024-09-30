@@ -24,6 +24,21 @@ interface Data {
   connectionType:string;
   creationTime: string;
 }
+interface SystemInfo {
+  hostname: string;
+  cpuUsage: number;
+  cpu: string;
+  cpuCore: number;
+  totalMemory: number;  // in MB
+  freeMemory: number;   // in MB
+  release: string;
+  platform: string;
+  uptime: number;  // in minutes
+  type: string;
+  machine: string;
+  architecture: string;
+  environment:string;
+}
 interface Group{
   id: number;
   name: string;
@@ -34,6 +49,8 @@ interface Group{
 interface DataContextProps {
   data: Data[];
   groups:Group[];
+  Requests:Requests[];
+  serverSystemInfo:serverSystemInfo[];
   dataLoaded: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lib:any|null;
@@ -52,19 +69,46 @@ interface DataContextProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setLibrary: (lib:any) => void;
   setDataLoaded: (bool:boolean) => void;
+  setRequests:(Requests:Requests[]) => void;
+  setserverSystemInfo:(serverSystemInfo:serverSystemInfo[]) => void;
 }
 
 // Create a Context with a default value
 export const DataContext = createContext<DataContextProps | undefined>(undefined);
-
+interface SystemInfoRequests {
+  status:boolean;
+  hostname: string;
+  cpuUsage: number;
+  cpu: string;
+  cpuCore: number;
+  totalMemory: number;  // in MB
+  freeMemory: number;   // in MB
+  release: string;
+  platform: string;
+  uptime: number;  // in minutes
+  type: string;
+  machine: string;
+  architecture: string;
+  environment:string;
+}
 // Create a Provider component
 interface DataProviderProps {
   children: ReactNode;
 }
 
+interface Requests{
+  id: number;
+  requests:SystemInfoRequests[]
+}
+interface serverSystemInfo{
+  id: number;
+  serverInfo:SystemInfo;
+}
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [data, setData] = useState<Data[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [Requests, setRequests] = useState<Requests[]>([]);
+  const [serverSystemInfo, setserverSystemInfo] = useState<serverSystemInfo[]>([]);
   const [selectedGroupID, setselectedGroupID] = useState(0);
   const [selectedServerID, setselectedServerID] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,7 +157,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ data,groups,lib,dataLoaded, setLibrary,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
+    <DataContext.Provider value={{ data,groups,lib,dataLoaded,serverSystemInfo,Requests ,setLibrary,setserverSystemInfo,setRequests,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
       {children}
     </DataContext.Provider>
   );

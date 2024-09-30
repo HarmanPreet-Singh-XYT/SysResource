@@ -11,6 +11,8 @@ interface ThresholdContextProps {
   setCpuThreshold: (value: number) => void;
   memoryThreshold: number;
   setMemoryThreshold: (value: number) => void;
+  serverDown: boolean;
+  setServerDown: (value: boolean) => void;
 }
 
 // Create a Context with a default value
@@ -26,9 +28,9 @@ export const ThresholdProvider: React.FC<ThresholdProviderProps> = ({ children }
   const [customAlert, setCustomAlert] = useState(false);
   const [cpuThreshold, setCpuThreshold] = useState(80); // Default threshold for CPU usage
   const [memoryThreshold, setMemoryThreshold] = useState(80); // Default threshold for Memory usage
-
+  const [serverDown, setServerDown] = useState(false);
   return (
-    <ThresholdContext.Provider value={{ alertsEnabled, setAlertsEnabled, customAlert, setCustomAlert, cpuThreshold, setCpuThreshold, memoryThreshold, setMemoryThreshold }}>
+    <ThresholdContext.Provider value={{ alertsEnabled, setAlertsEnabled, customAlert, setCustomAlert, cpuThreshold, setCpuThreshold, memoryThreshold, setMemoryThreshold,serverDown, setServerDown }}>
       {children}
     </ThresholdContext.Provider>
   );

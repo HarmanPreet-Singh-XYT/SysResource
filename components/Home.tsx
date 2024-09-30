@@ -8,6 +8,9 @@ import localStorageDB from 'localStorageDB';
 import { useData } from '@/helpers/Data'
 import CreatePopup, { Alerts, ModifyPopup, Settings } from './Home/Popup'
 import APIUpdate from './Home/APIUpdate'
+import WebSocketAPIUpdate from './Home/WebSocketAPIUpdate'
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 const Home = () => {
   const {setLibrary,setupData,setupGroup,data,selectedGroupID,setDataLoaded} = useData();
   const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false});
@@ -66,7 +69,20 @@ const Home = () => {
   }
   return (
     <div className='flex justify-center h-screen w-full'>
+      <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <APIUpdate/>
+      <WebSocketAPIUpdate/>
       <div className='w-[95%] 2xl:w-[70%] h-full relative'>
         <Navbar/>
         {popup.create && <CreatePopup setPopup={setPopupType}/>}
