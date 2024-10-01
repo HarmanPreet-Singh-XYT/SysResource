@@ -189,18 +189,21 @@ interface Data {
   connectionType:string;
   creationTime: string;
 }
-export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
+interface options{
+  connectivityType:string;
+  connectivityMedium:string;
+  type:string;
+}
+export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,options:options}) => {
     const {groups,selectedServerID,data,updateData} = useData();
     const [Data, setData] = useState<Data>(defaultData);
-    const [ConnectionType, setConnectionType] = useState<string>('API');
+
     useEffect(() => {
       data.map((each)=>{if(each.id===selectedServerID)setData(each)});
       const groupSetup = groups.find((each) => each.id === Data.groupID);
       if (groupSetup !== undefined) {
         setselectedGroup({ id: groupSetup.id, name: groupSetup.name });
       }
-      setConnectionType(Data.connectionType);
-      setType(Data.type);
       setconnectivityMedium(Data.connectivityMedium);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -209,7 +212,6 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
     const [dropdown, setdropdown] = useState(false);
     const [selectedGroup, setselectedGroup] = useState({id:0,name:'All'});
     const [connectivityMedium, setconnectivityMedium] = useState<string>('Domain');
-    const [type, setType] = useState<string>('Production');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const addServer = (e:any)=>{
         e.preventDefault();
@@ -264,11 +266,11 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
                     <label htmlFor='ip' className='font-semibold'>API</label>
-                    <input defaultChecked={ConnectionType==='API'} type='radio' name='connectionType' id='API' value={'API'} className='w-[20px] h-[20px] accent-black'/>
+                    <input defaultChecked={options.connectivityType==='API'} type='radio' name='connectionType' id='API' value={'API'} className='w-[20px] h-[20px] accent-black'/>
                   </div>
                   <div className='flex items-center gap-2'>
                     <label htmlFor='domain' className='font-semibold'>WebSocket</label>
-                    <input defaultChecked={ConnectionType==='WebSocket'} type='radio' name='connectionType' id='WebSocket' value={'WebSocket'} className='w-[20px] h-[20px] accent-black'/>
+                    <input defaultChecked={options.connectivityType==='WebSocket'} type='radio' name='connectionType' id='WebSocket' value={'WebSocket'} className='w-[20px] h-[20px] accent-black'/>
                   </div>
                 </div>
               </div>
@@ -279,11 +281,11 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
                     <label htmlFor='ip' className='font-semibold'>IP</label>
-                    <input defaultChecked={connectivityMedium==='IP'} onClick={()=>setconnectivityMedium('IP')} type='radio' name='mediumType' id='ip' value={'IP'} className='w-[20px] h-[20px] accent-black'/>
+                    <input defaultChecked={options.connectivityMedium==='IP'} onClick={()=>setconnectivityMedium('IP')} type='radio' name='mediumType' id='ip' value={'IP'} className='w-[20px] h-[20px] accent-black'/>
                   </div>
                   <div className='flex items-center gap-2'>
                     <label htmlFor='domain' className='font-semibold'>Domain</label>
-                    <input defaultChecked={connectivityMedium==='Domain'} onClick={()=>setconnectivityMedium('Domain')} type='radio' name='mediumType' id='domain' value={'Domain'} className='w-[20px] h-[20px] accent-black'/>
+                    <input defaultChecked={options.connectivityMedium==='Domain'} onClick={()=>setconnectivityMedium('Domain')} type='radio' name='mediumType' id='domain' value={'Domain'} className='w-[20px] h-[20px] accent-black'/>
                   </div>
                 </div>
               </div>
@@ -296,11 +298,11 @@ export const ModifyPopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
                     <label className='font-semibold'>Production</label>
-                    <input defaultChecked={type==='Production'} type='radio' name='type' value={'Production'} className='w-[20px] h-[20px] accent-black'/>
+                    <input defaultChecked={options.type==='Production'} type='radio' name='type' value={'Production'} className='w-[20px] h-[20px] accent-black'/>
                   </div>
                   <div className='flex items-center gap-2'>
                     <label className='font-semibold'>Development</label>
-                    <input defaultChecked={type==='Development'} type='radio' name='type' value={'Development'} className='w-[20px] h-[20px] accent-black'/>
+                    <input defaultChecked={options.type==='Development'} type='radio' name='type' value={'Development'} className='w-[20px] h-[20px] accent-black'/>
                   </div>
                 </div>
               </div>

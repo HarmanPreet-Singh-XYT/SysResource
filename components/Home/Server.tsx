@@ -19,8 +19,10 @@ interface props{
     platform:string,
     environment:string
     setPopup:(type:string)=>void
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setParams:(id:number)=>void
 }
-const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment,setPopup}:props) => {
+const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,usedMemory,totalMemory,platform,environment,setPopup,setParams}:props) => {
     const {removeServerDB} = useDB();
     const {removeData,setServerID} = useData();
     const [popup, setpopup] = useState({delete:false});
@@ -42,6 +44,10 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
         removeData(id);
         removeServerDB(id);
         openPopup('close');
+    }
+    const selectServer = (id:number)=>{
+        setParams(id);
+        setServerID(id);
     }
     return (
     <div className='min-h-[335px] ml-2 min-w-[540px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
@@ -133,7 +139,7 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
                 View Details
             </button>
             <div className='w-[1px] bg-black h-full'></div>
-            <button onClick={()=>{setServerID(id);setPopup('modify')}} className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+            <button onClick={()=>{selectServer(id);setPopup('modify')}} className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
                 Modify
             </button>
             <div className='w-[1px] bg-black h-full'></div>

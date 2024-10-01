@@ -1,4 +1,5 @@
 'use client'
+import { useThreshold } from '@/helpers/Alerts';
 import { useData } from '@/helpers/Data';
 import { useSettings } from '@/helpers/Settings';
 import React, { useEffect, useRef } from 'react';
@@ -34,14 +35,15 @@ const connectWebSocket = (
     return socket;
 };
 
-const WebSocketAPIUpdate = () => {
+const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
     const { dataLoaded, data, updateData } = useData();
-    const APITries = useRef(0);
     const retriesRef = useRef(0);  // For reconnection retries
     const maxRetries = 5;  // Maximum number of reconnection attempts
     const { maxAPIFailure } = useSettings();
     const socketRefs = useRef<{ [key: string]: WebSocket }>({});
-
+    const APITries = useRef(0);
+    const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled} = useThreshold();
+    const firstTime = useRef(true);
     useEffect(() => {
         if (dataLoaded) {
             data.forEach((each) => {
@@ -77,6 +79,12 @@ const WebSocketAPIUpdate = () => {
                                     isRunning: true,
                                     environment: APIRes.environment,
                                 });
+                                firstTime.current = false;
+                                if(customAlert && alertsEnabled){
+                                    if(APIRes.data.cpuUsage>cpuThreshold || APIRes.data.freeMemory<memoryThreshold){
+                                        setPopup('thresholdError');
+                                    }
+                                }
                             } else {
                                 if (APITries.current < maxAPIFailure) {
                                     APITries.current++;
@@ -89,6 +97,7 @@ const WebSocketAPIUpdate = () => {
                                         usedMemory: 0,
                                         cpuUsage: 0,
                                     });
+                                    if(firstTime.current === false && alertsEnabled) setPopup('error');
                                 }
                             }
                         };
@@ -115,6 +124,12 @@ const WebSocketAPIUpdate = () => {
                                 isRunning: true,
                                 environment: APIRes.environment,
                             });
+                            firstTime.current = false;
+                            if(customAlert && alertsEnabled){
+                                if(APIRes.data.cpuUsage>cpuThreshold || APIRes.data.freeMemory<memoryThreshold){
+                                    setPopup('thresholdError');
+                                }
+                            }
                         } else {
                             if (APITries.current < maxAPIFailure) {
                                 APITries.current++;
@@ -127,6 +142,7 @@ const WebSocketAPIUpdate = () => {
                                     usedMemory: 0,
                                     cpuUsage: 0,
                                 });
+                                if(firstTime.current === false && alertsEnabled) setPopup('error');
                             }
                         }
                     };
