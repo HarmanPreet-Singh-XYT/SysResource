@@ -24,11 +24,11 @@ const connectWebSocket = (
 
     socket.onclose = () => {
         console.log('WebSocket connection closed');
-        if (retriesRef.current < maxRetries) {
+        // if (retriesRef.current < maxRetries) {
             const retryDelay = Math.min(5000, retriesRef.current * 1000);  // Exponential backoff with max delay of 5 seconds
             retriesRef.current++;
             setTimeout(() => reconnect(url), retryDelay);  // Retry connection after delay
-        }
+        // }
     };
 
     return socket;
@@ -50,8 +50,48 @@ const WebSocketAPIUpdate = () => {
                     
                     // Reconnect function to use inside the socket setup
                     const reconnect = (url: string) => {
-                        console.log(`Attempting to reconnect for ${each.id}...`);
+                        // console.log(`Attempting to reconnect for ${each.id}...`);
+                        updateData(each.id, {
+                            ...each,
+                            isRunning: false,
+                            totalMemory: 0,
+                            availMemory: 0,
+                            usedMemory: 0,
+                            cpuUsage: 0,
+                        });
                         socketRefs.current[each.id] = connectWebSocket(url, reconnect, maxRetries, retriesRef);
+                        socketRefs.current[each.id].onmessage = (event) => {
+                            const APIRes = JSON.parse(event.data);
+    
+                            if (APIRes) {
+                                updateData(each.id, {
+                                    ...each,
+                                    platform: APIRes.type,
+                                    cpuUsage: APIRes.cpuUsage,
+                                    availMemory: APIRes.freeMemory,
+                                    totalMemory: APIRes.totalMemory,
+                                    usedMemory: APIRes.totalMemory - APIRes.freeMemory,
+                                    uptime: APIRes.uptime > 60
+                                        ? `${(APIRes.uptime / 60).toFixed(2)} Hours`
+                                        : `${(APIRes.uptime).toFixed(0)} Minutes`,
+                                    isRunning: true,
+                                    environment: APIRes.environment,
+                                });
+                            } else {
+                                if (APITries.current < maxAPIFailure) {
+                                    APITries.current++;
+                                } else {
+                                    updateData(each.id, {
+                                        ...each,
+                                        isRunning: false,
+                                        totalMemory: 0,
+                                        availMemory: 0,
+                                        usedMemory: 0,
+                                        cpuUsage: 0,
+                                    });
+                                }
+                            }
+                        };
                     };
 
                     // Initial connection
