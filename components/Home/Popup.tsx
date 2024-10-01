@@ -1,4 +1,5 @@
 'use client'
+import { updateApiConfigCookie } from '@/app/api/CookieData';
 import useDB from '@/controller/LocalDatabase';
 import { useThreshold } from '@/helpers/Alerts';
 import { useData } from '@/helpers/Data';
@@ -368,9 +369,13 @@ export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const setParameters = (e:any)=>{
     e.preventDefault();
-    setApiHistoryLimit(e.target.historyLimit.value);
-    setApiInterval(e.target.interval.value);
-    setmaxAPIFailure(e.target.maxretries.value);
+    setApiHistoryLimit(parseInt(e.target.limit.value));
+    setApiInterval(parseInt(e.target.interval.value));
+    setmaxAPIFailure(parseInt(e.target.maxretries.value));
+    updateApiConfigCookie('apiHistoryLimit', parseInt(e.target.limit.value));
+    updateApiConfigCookie('apiInterval', parseInt(e.target.interval.value));
+    updateApiConfigCookie('maxAPIFailure', parseInt(e.target.maxretries.value));
+    setPopup('close');
   }
   const copyToClipboard = (text:string)=>{
     navigator.clipboard.writeText(text);
@@ -386,7 +391,7 @@ export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
       });
   }
   return (
-    <form className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[300px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
+    <form onSubmit={setParameters} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[300px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
       <label className='font-bold text-sm'>Use this key for API Access Key</label>
       <div className='w-full mt-2 items-center h-[40px] px-2 rounded-[10px] border-[1px] flex justify-between border-[#CCCCCC]'>
         <p className='font-medium text-sm'>{generatedKey}</p>
@@ -422,7 +427,7 @@ export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
       </div>
       <div className='w-full justify-evenly flex mt-4'>
         <button type='button' onClick={()=>setPopup('close')} className='w-[100px] text-sm h-[40px] font-bold text-black text-[16px] hover:bg-black hover:text-white border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Cancel</button>
-        <button type='submit' onClick={setParameters} className='w-[100px] text-sm h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Apply</button>
+        <button type='submit' className='w-[100px] text-sm h-[40px] font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Apply</button>
       </div>
     </form>
   )
@@ -430,26 +435,50 @@ export const Settings = ({setPopup}:{setPopup:(type:string)=>void}) => {
 
 export const Alerts = ({setPopup}:{setPopup:(type:string)=>void})=>{
   const {alertsEnabled, setAlertsEnabled, customAlert, setCustomAlert, cpuThreshold, setCpuThreshold, memoryThreshold, setMemoryThreshold, serverDown, setServerDown} = useThreshold();
+  const setParams = (value:string,setting:string)=>{
+    switch (setting) {
+      case 'alerts':
+        setAlertsEnabled(!alertsEnabled);
+        updateApiConfigCookie('alertsEnabled', !alertsEnabled);
+        break;
+      case 'serverDown':
+        setServerDown(!serverDown);
+        updateApiConfigCookie('serverDown', !serverDown);
+        break;
+      case 'customAlert':
+        setCustomAlert(!customAlert);
+        updateApiConfigCookie('customAlert', !customAlert);
+        break;
+      case 'cpuThreshold':
+        setCpuThreshold(parseInt(value));
+        updateApiConfigCookie('cpuThreshold', parseInt(value));
+        break;
+      case 'memoryThreshold':
+        setMemoryThreshold(parseInt(value));
+        updateApiConfigCookie('memoryThreshold', parseInt(value));
+        break;
+    }
+  }
   return (
     <div className='absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-[250px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
       <div className='flex justify-between items-center'>
         <h3 className='font-bold'>Alerts</h3>
         <label className="switch">
-          <input defaultChecked={alertsEnabled} onClick={()=>setAlertsEnabled(!alertsEnabled)} type="checkbox"/>
+          <input defaultChecked={alertsEnabled} onClick={()=>setParams('','alerts')} type="checkbox"/>
           <span className="slider round"></span>
         </label>
       </div>
       <div className='flex justify-between items-center'>
         <h3 className='font-medium text-sm'>Server Down</h3>
         <label className="switch">
-          <input defaultChecked={serverDown} onClick={()=>setServerDown(!serverDown)} type="checkbox"/>
+          <input defaultChecked={serverDown} onClick={()=>setParams('','serverDown')} type="checkbox"/>
           <span className="slider round"></span>
         </label>
       </div>
       <div className='flex justify-between items-center'>
         <h3 className='font-medium text-sm'>Threshold Alert</h3>
         <label className="switch">
-          <input defaultChecked={customAlert} onClick={()=>setCustomAlert(!customAlert)} type="checkbox"/>
+          <input defaultChecked={customAlert} onClick={()=>setParams('','customAlert')} type="checkbox"/>
           <span className="slider round"></span>
         </label>
       </div>
@@ -457,14 +486,14 @@ export const Alerts = ({setPopup}:{setPopup:(type:string)=>void})=>{
         <div className='flex justify-between items-center'>
           <li className='list-item text-sm font-medium'>CPU Threshold</li>
           <div className='flex'>
-            <input defaultValue={cpuThreshold} onChange={(e)=>setCpuThreshold(parseInt(e.target.value))} type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
+            <input defaultValue={cpuThreshold} onChange={(e)=>setParams(e.target.value,'cpuThreshold')} type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
             <label className='ml-1 font-bold text-lg'>%</label>
           </div>
         </div>
         <div className='flex justify-between items-center'>
           <li className='list-item text-sm font-medium'>Memory Threshold</li>
           <div className='flex'>
-            <input defaultValue={memoryThreshold} onChange={(e)=>setMemoryThreshold(parseInt(e.target.value))} type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
+            <input defaultValue={memoryThreshold} onChange={(e)=>setParams(e.target.value,'memoryThreshold')} type='number' max={100} min={5} maxLength={3} className='border-[1px] border-black text-center rounded-[100px] w-[60px]'/>
             <label className='ml-1 font-bold text-lg'>%</label>
           </div>
         </div>
@@ -473,4 +502,42 @@ export const Alerts = ({setPopup}:{setPopup:(type:string)=>void})=>{
     </div>
   );
 }
+export const Error = ({setPopup,setClosedError}:{setPopup:(type:string)=>void,setClosedError:(value:boolean)=>void})=>{
+  const {data} = useData();
+  const [Mute, setMute] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [audio, setAudio] = useState<any>(null);
+  useEffect(() => {
+    const audioElement = new Audio('https://assets.mixkit.co/active_storage/sfx/2964/2964-preview.mp3');
+    setAudio(audioElement);
+    const interVal = setInterval(() => {
+      if(Mute===false && audio !== null) audio.play();
+    },1000)
+  
+    return () => {
+      clearInterval(interVal);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data,Mute])
+  
+  return (
+    <div className='absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-auto bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
+      <h3 className='font-bold'>Error</h3>
+      <p className='font-medium text-sm'>The following servers went down:</p>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <div className='overflow-auto max-h-[600px]'>
+        <ul className='flex flex-col gap-2'>
+          {data.map((each)=>each.isRunning === false ? <li key={each.id} className='list-item text-sm font-medium'>{each.name}</li> : null)}
+        </ul>
+      </div>
+      
+      <div className='flex justify-evenly'>
+        <button onClick={()=>{setClosedError(true);setPopup('close')}} className='w-[100px] text-sm mt-2 self-center py-1 font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Close</button>
+        <button onClick={()=>setMute(!Mute)} className='w-[100px] text-sm mt-2 self-center py-1 font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Mute</button>
+      </div>
+      
+    </div>
+  );
+}
+
 export default CreatePopup
