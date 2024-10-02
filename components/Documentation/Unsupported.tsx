@@ -60,6 +60,28 @@ const Unsupported = () => {
               implementations faster and more efficiently.
             </p>
           </div>
+          <h3 className="text-lg font-bold mt-4 mb-2">The Receiving JSON should be in this Pattern with their Respective Data Type</h3>
+          <pre className="bg-gray-800 overflow-x-auto text-white px-4 rounded">
+            <code>
+              {`
+{
+    "hostname": "DESKTOP-S283TVV",
+    "cpuUsage": 34,
+    "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 4.90GHz",
+    "cpuCore": 8,
+    "totalMemory": 17108,
+    "freeMemory": 4767,
+    "release": "10.0.19045",
+    "platform": "win32",
+    "uptime": 2925,
+    "type": "Windows_NT",
+    "machine": "x86_64",
+    "architecture": "x64",
+    "environment": "NodeJS"
+}
+              `}
+            </code>
+          </pre>
         </section>
       </div>
     </div>

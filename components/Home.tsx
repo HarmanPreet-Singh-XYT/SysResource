@@ -21,9 +21,7 @@ const Home = () => {
   
   const setPopupType = (type: string) => {
     // Define the base state with all popups set to false
-    if(type==='modify'){
-      
-    }
+
     const basePopupState = {
       modify: false,
       create: false,
@@ -70,6 +68,7 @@ const Home = () => {
         {popup.alerts && <Alerts setPopup={setPopupType}/>}
         {(popup.error && !closedError) && <Error setPopup={setPopupType} setClosedError={setClosedError}/>}
         {popup.thresholdError && <ThresholdError setPopup={setPopupType} setClosedError={setClosedError}/>}
+        
         <div className='flex justify-center xl:justify-between h-[88%]'>
           <div className='hidden xl:flex flex-col xl:justify-between'>
             <Groups/>

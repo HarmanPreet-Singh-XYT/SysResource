@@ -39,6 +39,7 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
         }
         addData(data);
         addServerDB(data);
+        window.location.reload();
         setPopup('close');
     }
   return (
@@ -239,6 +240,7 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
         }
         updateData(data.id,data);
         updateServerDB(data.id,data);
+        if(data.connectionType !== Data.connectionType || data.ipDomain !== Data.ipDomain || data.urlPath !== Data.urlPath || data.APIKey !== Data.APIKey) window.location.reload();
         setPopup('close');
     }
   return (
@@ -262,7 +264,7 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
                 <input type='text' name='APIKey' defaultValue={Data.APIKey} required placeholder='Enter API Access Key' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
-                <label className='font-bold'>Connection Type <span className='text-sm text-[#CCCCCC]'>(Requires Refresh)</span></label>
+                <label className='font-bold'>Connection Type</label>
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
                     <label htmlFor='ip' className='font-semibold'>API</label>

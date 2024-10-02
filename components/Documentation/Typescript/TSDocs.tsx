@@ -23,7 +23,7 @@ const TSDocs = () => {
             To integrate WebSocket functionality, follow the steps below:
           </p>
           <h1>Main File</h1>
-          <pre className='bg-gray-800 text-white p-4 rounded mb-4'>
+          <pre className='bg-gray-800 overflow-x-auto text-white p-4 rounded mb-4'>
           <code>
               {`
 // Main.ts
@@ -68,7 +68,7 @@ server.listen(PORT, () => {
             </code>
             </pre>
             <h1>websocketData.ts File</h1>
-          <pre className="bg-gray-800 text-white p-4 rounded mb-4">
+          <pre className="bg-gray-800 overflow-x-auto text-white p-4 rounded mb-4">
             <code>
               {`
 // websocketData.ts
@@ -177,7 +177,7 @@ export function sysResource_WebsocketData(server, options){
           <p className="text-gray-700 mb-4">
             Use the following API function to fetch system resource details:
           </p>
-          <pre className="bg-gray-800 text-white p-4 rounded mb-4">
+          <pre className="bg-gray-800 overflow-x-auto text-white p-4 rounded mb-4">
             <code>
               {`
 // Main.ts
@@ -220,7 +220,7 @@ server.listen(PORT, () => {
             </code>
           </pre>
           <h1>APIData.ts File</h1>
-          <pre className='bg-gray-800 text-white p-4 rounded mb-4'>
+          <pre className='bg-gray-800 overflow-x-auto text-white p-4 rounded mb-4'>
             <code>
               {`
 //APIData.ts

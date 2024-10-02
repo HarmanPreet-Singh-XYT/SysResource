@@ -54,7 +54,7 @@ export default async function setApiConfigCookies({
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: 60 * 60 * 24 * 365, // 1 week
     });
 
     // Return isCreated = true, no retrieved data
@@ -120,7 +120,7 @@ export async function updateApiConfigCookie(setting:string, value:string|number|
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
+      maxAge: 60 * 60 * 24 * 365, // 1 week
     });
   
     return {
