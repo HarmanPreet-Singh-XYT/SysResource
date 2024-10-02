@@ -5,7 +5,7 @@ import Groups from './Home/Groups'
 import BottomBtns from './Home/BottomBtns'
 import Server from './Home/Server'
 import { useData } from '@/helpers/Data'
-import CreatePopup, { Alerts, Error, ModifyPopup, Settings } from './Home/Popup'
+import CreatePopup, { Alerts, Error, ModifyPopup, Settings, ThresholdError } from './Home/Popup'
 import APIUpdate from './Home/APIUpdate'
 import WebSocketAPIUpdate from './Home/WebSocketAPIUpdate'
 import { ToastContainer } from 'react-toastify';
@@ -15,7 +15,7 @@ const Home = () => {
   const {data,selectedGroupID} = useData();
   const [closedError, setClosedError] = useState(false);
   const values = useRef({connectivityType:'',connectivityMedium:'',type:''});
-  const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false,error:false});
+  const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false,error:false,thresholdError:false});
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   
@@ -31,6 +31,7 @@ const Home = () => {
       details: false,
       alerts: false,
       error: false,
+      thresholdError:false
     };
   
     // If the type is not 'close', set the corresponding popup to true
@@ -68,6 +69,7 @@ const Home = () => {
         {popup.settings && <Settings setPopup={setPopupType}/>}
         {popup.alerts && <Alerts setPopup={setPopupType}/>}
         {(popup.error && !closedError) && <Error setPopup={setPopupType} setClosedError={setClosedError}/>}
+        {popup.thresholdError && <ThresholdError setPopup={setPopupType} setClosedError={setClosedError}/>}
         <div className='flex justify-center xl:justify-between h-[88%]'>
           <div className='hidden xl:flex flex-col xl:justify-between'>
             <Groups/>

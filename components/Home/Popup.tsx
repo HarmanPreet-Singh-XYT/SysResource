@@ -262,7 +262,7 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
                 <input type='text' name='APIKey' defaultValue={Data.APIKey} required placeholder='Enter API Access Key' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
-                <label className='font-bold'>Connection Type</label>
+                <label className='font-bold'>Connection Type <span className='text-sm text-[#CCCCCC]'>(Requires Refresh)</span></label>
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
                     <label htmlFor='ip' className='font-semibold'>API</label>
@@ -530,6 +530,44 @@ export const Error = ({setPopup,setClosedError}:{setPopup:(type:string)=>void,se
       <div className='overflow-auto max-h-[600px]'>
         <ul className='flex flex-col gap-2'>
           {data.map((each)=>each.isRunning === false ? <li key={each.id} className='list-item text-sm font-medium'>{each.name}</li> : null)}
+        </ul>
+      </div>
+      
+      <div className='flex justify-evenly'>
+        <button onClick={()=>{setClosedError(true);setPopup('close')}} className='w-[100px] text-sm mt-2 self-center py-1 font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Close</button>
+        <button onClick={()=>setMute(!Mute)} className='w-[100px] text-sm mt-2 self-center py-1 font-bold text-white bg-black text-[16px] hover:bg-white hover:text-black border-[1px] border-[#000000] rounded-[10px] items-center px-4'>Mute</button>
+      </div>
+      
+    </div>
+  );
+}
+export const ThresholdError = ({setPopup,setClosedError}:{setPopup:(type:string)=>void,setClosedError:(value:boolean)=>void})=>{
+  const {data} = useData();
+  const {cpuThreshold,memoryThreshold} = useThreshold();
+  const [Mute, setMute] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [audio, setAudio] = useState<any>(null);
+  useEffect(() => {
+    const audioElement = new Audio('https://assets.mixkit.co/active_storage/sfx/2964/2964-preview.mp3');
+    setAudio(audioElement);
+    const interVal = setInterval(() => {
+      if(Mute===false && audio !== null) audio.play();
+    },1000)
+  
+    return () => {
+      clearInterval(interVal);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data,Mute])
+  
+  return (
+    <div className='absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full sm:w-[400px] h-auto bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6'>
+      <h3 className='font-bold'>Threshold Error</h3>
+      <p className='font-medium text-sm'>The following servers have gone beyond Threshold:</p>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <div className='overflow-auto max-h-[600px]'>
+        <ul className='flex flex-col gap-2'>
+          {data.map((each)=>(each.usedMemory*100/each.totalMemory > memoryThreshold || each.cpuUsage > cpuThreshold) ? <li key={each.id} className='list-item text-sm font-medium'>{each.name}</li> : null)}
         </ul>
       </div>
       

@@ -9,9 +9,9 @@ const Navbar = () => {
         </div>
         <div className='w-[50px]'></div>
         <div className='xl:flex hidden items-center gap-8'>
-            <Link className='font-bold' href={'/'}>Cloud</Link>
-            <Link className='font-bold' href={'/'}>Docs</Link>
-            <Link className='font-bold' href={'/'}>Get Started</Link>
+            <Link className='font-bold' href={'/cloud'}>Cloud</Link>
+            {/* <Link className='font-bold' href={'/'}>Docs</Link> */}
+            <Link className='font-bold' href={'/docs'}>Get Started</Link>
         </div>
     </nav>
   )

@@ -48,6 +48,7 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
     const selectServer = (id:number)=>{
         setParams(id);
         setServerID(id);
+        setPopup('modify');
     }
     return (
     <div className='min-h-[335px] ml-2 min-w-[540px] border-[1px] relative border-black rounded-[10px] overflow-hidden'>
@@ -139,7 +140,7 @@ const Server = ({id,name,ip,domain,isRunning,uptime,type,cpuUsage,availMemory,us
                 View Details
             </button>
             <div className='w-[1px] bg-black h-full'></div>
-            <button onClick={()=>{selectServer(id);setPopup('modify')}} className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
+            <button onClick={()=>selectServer(id)} className='w-[20%] transition-colors duration-100 hover:border-[1px] hover:border-white hover:bg-black hover:text-white h-full flex justify-center items-center text-center font-bold'>
                 Modify
             </button>
             <div className='w-[1px] bg-black h-full'></div>

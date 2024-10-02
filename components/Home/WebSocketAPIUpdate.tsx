@@ -42,11 +42,16 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
     const { maxAPIFailure } = useSettings();
     const socketRefs = useRef<{ [key: string]: WebSocket }>({});
     const APITries = useRef(0);
-    const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled} = useThreshold();
+    const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled, serverDown} = useThreshold();
     const firstTime = useRef(true);
+    const dataRef = useRef(data);
+
+    useEffect(() => {
+        dataRef.current = data;
+    }, [data]); // Keep updating the ref when data changes
     useEffect(() => {
         if (dataLoaded) {
-            data.forEach((each) => {
+            data.forEach((each,index) => {
                 if (each.connectionType === 'WebSocket') {
                     const socketUrl = `${each.ipDomain}/sysresource?key=${each.APIKey}`;  // Attach API key in URL
                     
@@ -54,7 +59,8 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                     const reconnect = (url: string) => {
                         // console.log(`Attempting to reconnect for ${each.id}...`);
                         updateData(each.id, {
-                            ...each,
+                            ...dataRef.current[index],
+                            id:each.id,
                             isRunning: false,
                             totalMemory: 0,
                             availMemory: 0,
@@ -67,9 +73,10 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
     
                             if (APIRes) {
                                 updateData(each.id, {
-                                    ...each,
+                                    ...dataRef.current[index],
+                                    id:each.id,
                                     platform: APIRes.type,
-                                    cpuUsage: APIRes.cpuUsage,
+                                    cpuUsage: APIRes.cpuUsage<=100 ? APIRes.cpuUsage : 0,
                                     availMemory: APIRes.freeMemory,
                                     totalMemory: APIRes.totalMemory,
                                     usedMemory: APIRes.totalMemory - APIRes.freeMemory,
@@ -90,14 +97,15 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                                     APITries.current++;
                                 } else {
                                     updateData(each.id, {
-                                        ...each,
+                                        ...dataRef.current[index],
+                                        id:each.id,
                                         isRunning: false,
                                         totalMemory: 0,
                                         availMemory: 0,
                                         usedMemory: 0,
                                         cpuUsage: 0,
                                     });
-                                    if(firstTime.current === false && alertsEnabled) setPopup('error');
+                                    if(firstTime.current === false && alertsEnabled && serverDown) setPopup('error');
                                 }
                             }
                         };
@@ -112,9 +120,10 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
 
                         if (APIRes) {
                             updateData(each.id, {
-                                ...each,
+                                ...dataRef.current[index],
+                                id:each.id,
                                 platform: APIRes.type,
-                                cpuUsage: APIRes.cpuUsage,
+                                cpuUsage: APIRes.cpuUsage<=100 ? APIRes.cpuUsage : 0,
                                 availMemory: APIRes.freeMemory,
                                 totalMemory: APIRes.totalMemory,
                                 usedMemory: APIRes.totalMemory - APIRes.freeMemory,
@@ -135,14 +144,15 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                                 APITries.current++;
                             } else {
                                 updateData(each.id, {
-                                    ...each,
+                                    ...dataRef.current[index],
+                                    id:each.id,
                                     isRunning: false,
                                     totalMemory: 0,
                                     availMemory: 0,
                                     usedMemory: 0,
                                     cpuUsage: 0,
                                 });
-                                if(firstTime.current === false && alertsEnabled) setPopup('error');
+                                if(firstTime.current === false && alertsEnabled && serverDown) setPopup('error');
                             }
                         }
                     };

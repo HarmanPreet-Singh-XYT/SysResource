@@ -7,7 +7,7 @@ import React, { useEffect, useRef } from 'react'
 const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
     const {dataLoaded, data, updateData} = useData();
     const APITries = useRef(0);
-    const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled} = useThreshold();
+    const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled,serverDown} = useThreshold();
     const {apiInterval, maxAPIFailure} = useSettings();
     const firstTime = useRef(true);
     const dataRef = useRef(data);
@@ -23,28 +23,18 @@ const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                     if(APIRes.status && APIRes.data != undefined){
                         APITries.current = 0;
                         updateData(each.id, {
-                            id: dataRef.current[index].id,
-                            name: dataRef.current[index].name,
-                            ip: dataRef.current[index].ip,
-                            domain: dataRef.current[index].domain,
-                            isRunning: true, // Update based on the API response
-                            uptime: APIRes.data.uptime > 60 
-                                ? `${(APIRes.data.uptime / 60).toFixed(2)} Hours` 
-                                : `${APIRes.data.uptime.toFixed(0)} Minutes`,
-                            type: dataRef.current[index].type,
+                            ...dataRef.current[index],
+                            id:each.id,
+                            platform: APIRes.data.type,
                             cpuUsage: APIRes.data.cpuUsage,
                             availMemory: APIRes.data.freeMemory,
                             totalMemory: APIRes.data.totalMemory,
                             usedMemory: APIRes.data.totalMemory - APIRes.data.freeMemory,
-                            platform: APIRes.data?.type,
+                            uptime: APIRes.data.uptime > 60
+                                ? `${(APIRes.data.uptime / 60).toFixed(2)} Hours`
+                                : `${(APIRes.data.uptime).toFixed(0)} Minutes`,
+                            isRunning: true,
                             environment: APIRes.data.environment,
-                            connectivityMedium: dataRef.current[index].connectivityMedium,
-                            ipDomain: dataRef.current[index].ipDomain,
-                            groupID: dataRef.current[index].groupID,
-                            APIKey: dataRef.current[index].APIKey,
-                            urlPath: dataRef.current[index].urlPath,
-                            connectionType: dataRef.current[index].connectionType,
-                            creationTime: dataRef.current[index].creationTime
                         });
                         firstTime.current = false;
                         if(customAlert && alertsEnabled){
@@ -57,28 +47,15 @@ const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                             APITries.current++;
                         }else{
                             updateData(each.id, {
-                                id: dataRef.current[index].id,
-                                name: dataRef.current[index].name,
-                                ip: dataRef.current[index].ip,
-                                domain: dataRef.current[index].domain,
-                                isRunning: false,  // Set to false since the system is down
-                                uptime: dataRef.current[index].uptime,
-                                type: dataRef.current[index].type,
-                                cpuUsage: 0,  // Resetting CPU usage to zero
-                                availMemory: 0,  // Resetting available memory to zero
-                                totalMemory: 0,  // Resetting total memory to zero
-                                usedMemory: 0,  // Resetting used memory to zero
-                                platform: dataRef.current[index].platform,
-                                environment: dataRef.current[index].environment,
-                                connectivityMedium: dataRef.current[index].connectivityMedium,
-                                ipDomain: dataRef.current[index].ipDomain,
-                                groupID: dataRef.current[index].groupID,
-                                APIKey: dataRef.current[index].APIKey,
-                                urlPath: dataRef.current[index].urlPath,
-                                connectionType: dataRef.current[index].connectionType,
-                                creationTime: dataRef.current[index].creationTime
+                                ...dataRef.current[index],
+                                id:each.id,
+                                isRunning: false,
+                                totalMemory: 0,
+                                availMemory: 0,
+                                usedMemory: 0,
+                                cpuUsage: 0,
                             });
-                            if(firstTime.current === false && alertsEnabled) setPopup('error');
+                            if(firstTime.current === false && alertsEnabled && serverDown) setPopup('error');
                         }
                     }
                 }
