@@ -11,6 +11,7 @@ import WebSocketAPIUpdate from './Home/WebSocketAPIUpdate'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import InitData from './Home/InitData'
+import Details from './Home/Details'
 const Home = () => {
   const {data,selectedGroupID} = useData();
   const [closedError, setClosedError] = useState(false);
@@ -68,7 +69,7 @@ const Home = () => {
         {popup.alerts && <Alerts setPopup={setPopupType}/>}
         {(popup.error && !closedError) && <Error setPopup={setPopupType} setClosedError={setClosedError}/>}
         {popup.thresholdError && <ThresholdError setPopup={setPopupType} setClosedError={setClosedError}/>}
-        
+        {/* {<Details/>} */}
         <div className='flex justify-center xl:justify-between h-[88%]'>
           <div className='hidden xl:flex flex-col xl:justify-between'>
             <Groups/>
