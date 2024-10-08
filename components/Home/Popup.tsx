@@ -43,26 +43,26 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
         setPopup('close');
     }
   return (
-    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-[650px] h-[500px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-8 shadow-lg px-10'>
-          <div className='flex h-[85%] justify-between'>
+    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 overflow-y-auto bottom-0 self-center mx-auto w-full md:w-[650px] h-[90%] md:h-[450px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-8 shadow-lg px-10'>
+          <div className='flex h-full md:h-[85%] justify-between md:flex-row flex-col md:gap-10'>
             <div className='flex flex-col justify-evenly h-full'>
               <div className='flex flex-col'>
                 <label className='font-bold'>Name*</label>
-                <input type='text' name='name' required placeholder='Enter Name' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='name' required placeholder='Enter Name' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
                 <label className='font-bold'>IP <span className='font-normal text-[#CCCCCC] text-sm'>(Optional)</span></label>
-                <input type='text' name='optIP' placeholder='Enter IP' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='optIP' placeholder='Enter IP' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
                 <label className='font-bold'>Domain <span className='font-normal text-[#CCCCCC] text-sm'>(Optional)</span></label>
-                <input type='text' name='optDomain' placeholder='Enter Domain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='optDomain' placeholder='Enter Domain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
                 <label className='font-bold'>API Access Key*</label>
-                <input type='text' name='APIKey' required placeholder='Enter API Access Key' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='APIKey' required placeholder='Enter API Access Key' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
-              <div className='flex flex-col'>
+              <div className='flex flex-col md:mt-0 mt-4'>
                 <label className='font-bold'>Connection Type</label>
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
@@ -76,7 +76,7 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
                 </div>
               </div>
             </div>
-            <div className='flex flex-col justify-evenly h-full w-[45%]'>
+            <div className='flex flex-col justify-evenly h-full w-full'>
               <div className='flex flex-col'>
                 <label className='font-bold'>Connectivity Medium</label>
                 <div className='flex justify-between mt-2'>
@@ -92,7 +92,7 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
               </div>
               <div className='flex flex-col mt-1'>
                 <label className='font-bold'>Connection {connectivityMedium} with Port</label>
-                <input type='text' required placeholder={`${connectivityMedium==='Domain' ? 'https://www.google.com:3000' : '127.0.0.1:3000'}`} name='ipDomain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' required placeholder={`${connectivityMedium==='Domain' ? 'https://www.google.com:3000' : '127.0.0.1:3000'}`} name='ipDomain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col mt-1'>
                 <label className='font-bold'>Type</label>
@@ -134,7 +134,7 @@ const CreatePopup = ({setPopup}:{setPopup:(type:string)=>void}) => {
                 <label className='font-bold'>URL Path</label>
                 <div className='flex'>
                   <div className='rounded-l-[10px] w-[40px] h-[40px] border-[1px] border-[#CCCCCC] flex items-center justify-center'><label className='font-bold text-xl'>/</label></div>
-                  <input required defaultValue={'sysresource'} type='text' name='path' placeholder='Enter URL Path' className='border-[1px] border-[#CCCCCC] rounded-r-[10px] w-[250px] h-[40px] px-2'/>
+                  <input required defaultValue={'sysresource'} type='text' name='path' placeholder='Enter URL Path' className='border-[1px] border-[#CCCCCC] rounded-r-[10px] w-full md:w-[250px] h-[40px] px-2'/>
                 </div>
               </div>
             </div>
@@ -244,26 +244,26 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
         setPopup('close');
     }
   return (
-    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 bottom-0 self-center mx-auto w-[650px] h-[450px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-8 shadow-lg px-10'>
-          <div className='flex h-[85%] justify-between'>
+    <form onSubmit={addServer} className='absolute z-20 top-0 left-0 right-0 overflow-y-auto bottom-0 self-center mx-auto w-[450px] md:w-[650px] h-[90%] md:h-[450px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-8 shadow-lg px-10'>
+          <div className='flex h-full md:h-[85%] justify-between md:flex-row flex-col md:gap-10'>
             <div className='flex flex-col justify-evenly h-full'>
               <div className='flex flex-col'>
                 <label className='font-bold'>Name*</label>
-                <input type='text' name='name' defaultValue={Data.name} required placeholder='Enter Name' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='name' defaultValue={Data.name} required placeholder='Enter Name' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
                 <label className='font-bold'>IP <span className='font-normal text-[#CCCCCC] text-sm'>(Optional)</span></label>
-                <input type='text' name='optIP' defaultValue={Data.ip} placeholder='Enter IP' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='optIP' defaultValue={Data.ip} placeholder='Enter IP' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
                 <label className='font-bold'>Domain <span className='font-normal text-[#CCCCCC] text-sm'>(Optional)</span></label>
-                <input type='text' name='optDomain' defaultValue={Data.domain} placeholder='Enter Domain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='optDomain' defaultValue={Data.domain} placeholder='Enter Domain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col'>
                 <label className='font-bold'>API Access Key*</label>
-                <input type='text' name='APIKey' defaultValue={Data.APIKey} required placeholder='Enter API Access Key' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' name='APIKey' defaultValue={Data.APIKey} required placeholder='Enter API Access Key' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
-              <div className='flex flex-col'>
+              <div className='flex flex-col md:mt-0 mt-4'>
                 <label className='font-bold'>Connection Type</label>
                 <div className='flex justify-between mt-2'>
                   <div className='flex items-center gap-2'>
@@ -277,7 +277,7 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
                 </div>
               </div>
             </div>
-            <div className='flex flex-col justify-evenly h-full w-[45%]'>
+            <div className='flex flex-col justify-evenly h-full w-full'>
               <div className='flex flex-col'>
                 <label className='font-bold'>Connectivity Medium</label>
                 <div className='flex justify-between mt-2'>
@@ -293,7 +293,7 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
               </div>
               <div className='flex flex-col mt-1'>
                 <label className='font-bold'>Connection {connectivityMedium} with Port</label>
-                <input type='text' defaultValue={Data.ipDomain} required placeholder={`${connectivityMedium==='Domain' ? 'https://www.google.com:3000' : '127.0.0.1:3000'}`} name='ipDomain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-[250px] h-[40px] px-4'/>
+                <input type='text' defaultValue={Data.ipDomain} required placeholder={`${connectivityMedium==='Domain' ? 'https://www.google.com:3000' : '127.0.0.1:3000'}`} name='ipDomain' className='border-[1px] border-[#CCCCCC] rounded-[10px] w-full md:w-[250px] h-[40px] px-4'/>
               </div>
               <div className='flex flex-col mt-1'>
                 <label className='font-bold'>Type</label>
@@ -335,7 +335,7 @@ export const ModifyPopup = ({setPopup,options}:{setPopup:(type:string)=>void,opt
                 <label className='font-bold'>URL Path</label>
                 <div className='flex'>
                   <div className='rounded-l-[10px] w-[40px] h-[40px] border-[1px] border-[#CCCCCC] flex items-center justify-center'><label className='font-bold text-xl'>/</label></div>
-                  <input required defaultValue={Data.urlPath} type='text' name='path' placeholder='Enter URL Path' className='border-[1px] border-[#CCCCCC] rounded-r-[10px] w-[250px] h-[40px] px-2'/>
+                  <input required defaultValue={Data.urlPath} type='text' name='path' placeholder='Enter URL Path' className='border-[1px] border-[#CCCCCC] rounded-r-[10px] w-full md:w-[250px] h-[40px] px-2'/>
                 </div>
               </div>
             </div>

@@ -12,12 +12,15 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import InitData from './Home/InitData'
 import Details from './Home/Details'
+import MobileServer from './Home/MobileInterface/MobileServer'
+import useWindowDimensions from './Home/Dimensions'
+import Sidebar from './Home/MobileInterface/Sidebar'
 const Home = () => {
   const {data,selectedGroupID} = useData();
   const [closedError, setClosedError] = useState(false);
   const values = useRef({connectivityType:'',connectivityMedium:'',type:''});
   const [popup, setPopup] = useState({modify:false,create:false,settings:false,details:false,alerts:false,error:false,thresholdError:false});
-  
+  const { width } = useWindowDimensions();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   
   const setPopupType = (type: string) => {
@@ -45,6 +48,7 @@ const Home = () => {
   }
   return (
     <div className='flex justify-center h-screen w-full'>
+      <Sidebar setPopup={setPopupType}/>
       <ToastContainer 
         position="top-right"
         autoClose={5000}
@@ -75,9 +79,12 @@ const Home = () => {
             <Groups/>
             <BottomBtns setPopup={setPopupType}/>
           </div>
-          <div className='w-[955px] overflow-auto max-h-full min-h-[40%] flex flex-col gap-5'>
-            {data.map((each)=> (each.groupID===selectedGroupID || selectedGroupID===0) &&
+          <div className='w-[955px] overflow-y-auto max-h-full min-h-[40%] flex flex-col gap-5 rounded-[10px]'>
+            {width!==undefined && width > 750 && data.map((each)=> (each.groupID===selectedGroupID || selectedGroupID===0) &&
               <Server setParams={setParams} key={each.id} id={each.id} name={each.name} ip={each.ip} domain={each.domain} isRunning={each.isRunning} uptime={each.uptime} type={each.type} cpuUsage={each.cpuUsage} availMemory={each.availMemory} usedMemory={each.usedMemory} totalMemory={each.totalMemory} platform={each.platform} environment={each.environment} setPopup={setPopupType}/>
+            )}
+            {width!==undefined && width < 750 && data.map((each)=> (each.groupID===selectedGroupID || selectedGroupID===0) &&
+              <MobileServer setParams={setParams} key={each.id} id={each.id} name={each.name} ip={each.ip} domain={each.domain} isRunning={each.isRunning} uptime={each.uptime} type={each.type} cpuUsage={each.cpuUsage} availMemory={each.availMemory} usedMemory={each.usedMemory} totalMemory={each.totalMemory} platform={each.platform} environment={each.environment} setPopup={setPopupType}/>
             )}
           </div>
         </div>
