@@ -171,8 +171,8 @@ const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
             <h1 className='text-end text-white text-sm font-medium'>Error Logs</h1>
             <div className='h-[90%] w-full flex items-end overflow-auto flex-col'>
               {errorsList.current.map((each:Errors,index:number)=>
-               <div key={index} className='w-full flex justify-between'><p className='text-white text-sm font-medium'>{each.time}</p>
-               <p className='text-white text-sm font-medium'>{serverDetails.connectivityMedium}: {each.error}</p>
+               <div key={index} className='w-full'><p className='text-white text-sm font-medium'>{each.time}</p>
+               <p className='text-white text-sm font-medium'>-{serverDetails.connectivityMedium}: {each.error}</p>
                </div>)}
             </div>
           </div>
