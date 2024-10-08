@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect } from 'react'
-import localStorageDB from '../../localStorage/localStorageDB';
+import localStorageDB from '../../localStorage/localStorageDB.js';
 import { useData } from '@/helpers/Data';
 import setApiConfigCookies from '@/app/api/CookieData';
 import { useThreshold } from '@/helpers/Alerts';
