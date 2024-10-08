@@ -44,7 +44,7 @@ const Home = () => {
     data.map((each)=>{if(each.id===id){values.current={connectivityType:each.connectionType,connectivityMedium:each.connectivityMedium,type:each.type}}});
   }
   return (
-    <div className='flex justify-center h-full w-full'>
+    <div className='flex justify-center h-screen w-full'>
       <ToastContainer 
         position="top-right"
         autoClose={5000}
@@ -69,9 +69,9 @@ const Home = () => {
         {popup.alerts && <Alerts setPopup={setPopupType}/>}
         {(popup.error && !closedError) && <Error setPopup={setPopupType} setClosedError={setClosedError}/>}
         {popup.thresholdError && <ThresholdError setPopup={setPopupType} setClosedError={setClosedError}/>}
-        {popup.details && <Details/>}
-        <div className='flex justify-center xl:justify-between h-[88%]'>
-          <div className='hidden xl:flex flex-col xl:justify-between'>
+        <Details setPopup={setPopupType} isOpen={popup.details}/>
+        <div className='flex justify-center xl:justify-between h-[85%]'>
+          <div className='hidden xl:flex xl:flex-col xl:justify-between'>
             <Groups/>
             <BottomBtns setPopup={setPopupType}/>
           </div>

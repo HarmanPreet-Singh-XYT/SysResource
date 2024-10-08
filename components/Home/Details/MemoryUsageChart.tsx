@@ -1,5 +1,5 @@
 // components/MemoryUsageChart.tsx
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -22,23 +22,8 @@ ChartJS.register(
   Legend
 );
 
-const MemoryUsageChart = () => {
-  const [memoryData, setMemoryData] = useState<number[]>([500, 600, 550, 700, 800, 750, 850]); // Initial Memory Usage in MB
-  const [labels, setLabels] = useState<string[]>(['1s', '2s', '3s', '4s', '5s', '6s', '7s']); // Initial Labels
-
-  // Simulate live data update every 1 second
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newMemoryUsage = Math.floor(Math.random() * 1000); // Mock Memory usage value in MB
-      setMemoryData((prevData) => [...prevData.slice(1), newMemoryUsage]);
-      setLabels((prevLabels) => [
-        ...prevLabels.slice(1),
-        `${parseInt(prevLabels[prevLabels.length - 1]) + 1}s`
-      ]);
-    }, 1000);
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
+const MemoryUsageChart = ({memoryData,labels,maxValue}:{memoryData:number[],labels:string[],maxValue:number}) => {
+  
 
   const data = {
     labels: labels,
@@ -60,7 +45,7 @@ const MemoryUsageChart = () => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 1000, // Assuming maximum memory in MB (adjust based on actual data)
+        max: maxValue, // Assuming maximum memory in MB (adjust based on actual data)
       },
     },
     plugins: {

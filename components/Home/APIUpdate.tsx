@@ -4,8 +4,26 @@ import { useThreshold } from '@/helpers/Alerts';
 import { useData } from '@/helpers/Data'
 import { useSettings } from '@/helpers/Settings';
 import React, { useEffect, useRef } from 'react'
+const formatCurrentTime = () => {
+    const now = new Date();
+
+    const formattedDate = now.toLocaleDateString('en-US', {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+    });
+
+    const formattedTime = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+    });
+
+    return `${formattedDate} - ${formattedTime}`;
+};
 const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
-    const {dataLoaded, data, updateData,Requests} = useData();
+    const {dataLoaded, data, updateData,errors,setserverSystemInfo,serverSystemInfo} = useData();
     const APITries = useRef(0);
     const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled,serverDown} = useThreshold();
     const {apiInterval, maxAPIFailure} = useSettings();
@@ -36,12 +54,14 @@ const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                             isRunning: true,
                             environment: APIRes.data.environment,
                         });
-                        // Requests.map((eacharr)=>each.id===eacharr.id && 
-                        // eacharr.requests.push({status:true,hostname:APIRes.data.hostname,cpuUsage:APIRes.data.cpuUsage,cpu:APIRes.data.cpu,
-                        //     cpuCore:APIRes.data.cpuCore,totalMemory:APIRes.data.totalMemory,
-                        //     freeMemory:APIRes.data.freeMemory,uptime:APIRes.data.uptime,platform:APIRes.data.type,
-                        //     environment:APIRes.data.environment,release:APIRes.data.release,machine:APIRes.data.machine,
-                        //     architecture:APIRes.data.architecture,type:APIRes.data.type}));
+
+                        const orgData = {status:true,hostname:APIRes.data.hostname,cpuUsage:APIRes.data.cpuUsage,cpu:APIRes.data.cpu,
+                            cpuCore:APIRes.data.cpuCore,totalMemory:APIRes.data.totalMemory,
+                            freeMemory:APIRes.data.freeMemory,uptime:APIRes.data.uptime,platform:APIRes.data.platform,
+                            environment:APIRes.data.environment,release:APIRes.data.release,machine:APIRes.data.machine,
+                            architecture:APIRes.data.architecture,type:APIRes.data.type};
+                        setserverSystemInfo([...serverSystemInfo,{id:each.id,serverInfo:orgData}]);
+                        
                         firstTime.current = false;
                         if(customAlert && alertsEnabled){
                             if(APIRes.data.cpuUsage>cpuThreshold || APIRes.data.freeMemory<memoryThreshold){
@@ -49,6 +69,7 @@ const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                             }
                         }
                     }else{
+                        errors.map((error)=>error.id===each.id && error.errors.push({time:formatCurrentTime(),error:APIRes.error!==null ? APIRes.error : 'Fetch Error'}));
                         if(APITries.current<maxAPIFailure){
                             APITries.current++;
                         }else{

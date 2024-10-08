@@ -49,7 +49,7 @@ interface Group{
 interface DataContextProps {
   data: Data[];
   groups:Group[];
-  Requests:Requests[];
+  errors:Errors[];
   serverSystemInfo:serverSystemInfo[];
   dataLoaded: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,30 +74,14 @@ interface DataContextProps {
 
 // Create a Context with a default value
 export const DataContext = createContext<DataContextProps | undefined>(undefined);
-interface SystemInfoRequests {
-  status:boolean;
-  hostname: string;
-  cpuUsage: number;
-  cpu: string;
-  cpuCore: number;
-  totalMemory: number;  // in MB
-  freeMemory: number;   // in MB
-  release: string;
-  platform: string;
-  uptime: number;  // in minutes
-  type: string;
-  machine: string;
-  architecture: string;
-  environment:string;
-}
+
 // Create a Provider component
 interface DataProviderProps {
   children: ReactNode;
 }
 
-interface Requests{
+interface Errors{
   id: number;
-  requests:SystemInfoRequests[]
   errors:{time:string,error:string}[];
 }
 interface serverSystemInfo{
@@ -108,7 +92,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [data, setData] = useState<Data[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   // eslint-disable-next-line prefer-const
-  let Requests:Requests[] = [];
+  const errors:Errors[] = [];
   const [serverSystemInfo, setserverSystemInfo] = useState<serverSystemInfo[]>([]);
   const [selectedGroupID, setselectedGroupID] = useState(0);
   const [selectedServerID, setselectedServerID] = useState(0);
@@ -158,7 +142,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   }
 
   return (
-    <DataContext.Provider value={{ data,groups,lib,dataLoaded,serverSystemInfo, Requests,setLibrary,setserverSystemInfo,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
+    <DataContext.Provider value={{ data,groups,lib,dataLoaded,serverSystemInfo, errors,setLibrary,setserverSystemInfo,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
       {children}
     </DataContext.Provider>
   );
