@@ -5,25 +5,6 @@ import { useSettings } from '@/helpers/Settings';
 import React, { useEffect, useRef } from 'react';
 
 
-const formatCurrentTime = () => {
-    const now = new Date();
-
-    const formattedDate = now.toLocaleDateString('en-US', {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-    });
-
-    const formattedTime = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-    });
-
-    return `${formattedDate} - ${formattedTime}`;
-};
-
 // Define a WebSocket connection function with reconnection logic
 const connectWebSocket = (
     url: string,
@@ -56,7 +37,7 @@ const connectWebSocket = (
 };
 
 const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
-    const { dataLoaded, data, updateData,errors,setserverSystemInfo,serverSystemInfo } = useData();
+    const { dataLoaded, data, updateData,updateErrors,setserverSystemInfo,serverSystemInfo } = useData();
     const retriesRef = useRef(0);  // For reconnection retries
     const maxRetries = 5;  // Maximum number of reconnection attempts
     const { maxAPIFailure } = useSettings();
@@ -78,7 +59,7 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                     // Reconnect function to use inside the socket setup
                     const reconnect = (url: string) => {
                         // console.log(`Attempting to reconnect for ${each.id}...`);
-                        errors.map((error)=>error.id===each.id && error.errors.push({time:formatCurrentTime(),error:'Lost Connection, reconnecting'}));
+                        updateErrors({id:each.id,error:'Lost connection, reconnecting...'});
                         updateData(each.id, {
                             ...dataRef.current[index],
                             id:each.id,
@@ -107,7 +88,6 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                                     isRunning: true,
                                     environment: APIRes.environment,
                                 });
-                                console.log(APIRes);
                                 const orgData = {status:true,hostname:APIRes.hostname,cpuUsage:APIRes.cpuUsage,cpu:APIRes.cpu,
                                     cpuCore:APIRes.cpuCore,totalMemory:APIRes.totalMemory,
                                     freeMemory:APIRes.freeMemory,uptime:APIRes.uptime,platform:APIRes.platform,
@@ -121,7 +101,7 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                                     }
                                 }
                             } else {
-                                errors.map((error)=>error.id===each.id && error.errors.push({time:formatCurrentTime(),error:APIRes.error!==null ? APIRes.error : 'Fetch Error'}));
+                                updateErrors({id:each.id,error:APIRes.error!==null ? APIRes.error : 'Fetch Error'});
                                 if (APITries.current < maxAPIFailure) {
                                     APITries.current++;
                                 } else {
@@ -175,7 +155,7 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                                 }
                             }
                         } else {
-                            errors.map((error)=>error.id===each.id && error.errors.push({time:formatCurrentTime(),error:APIRes.error!==null ? APIRes.error : 'Fetch Error'}));
+                            updateErrors({id:each.id,error:APIRes.error!==null ? APIRes.error : 'Fetch Error'});
                             if (APITries.current < maxAPIFailure) {
                                 APITries.current++;
                             } else {

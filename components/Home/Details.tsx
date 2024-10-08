@@ -28,7 +28,7 @@ interface Errors{
   time:string;
   error:string;
 }
-const Details = ({setPopup,isOpen}:{setPopup:(type:string)=>void,isOpen:boolean}) => {
+const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
   const [cpuData, setCpuData] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]); // Initial Data
   const [labels, setLabels] = useState<string[]>(['0', '0', '0', '0', '0', '0', '0']); // Initial Labels
   const [memoryData, setMemoryData] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]); // Initial Memory Usage in MB
@@ -109,7 +109,6 @@ const Details = ({setPopup,isOpen}:{setPopup:(type:string)=>void,isOpen:boolean}
       ...prevLabels.slice(1),
       `${parseInt(prevLabels[prevLabels.length - 1]) + 1}`
     ]);
-
     // memory updates
     const newMemoryUsage = dynamicServerDetails.current.usedMemory; // Mock Memory usage value in MB
       setMemoryData((prevData) => [...prevData.slice(1), newMemoryUsage]);
@@ -119,7 +118,7 @@ const Details = ({setPopup,isOpen}:{setPopup:(type:string)=>void,isOpen:boolean}
       ]);
   }, [data])
   return (
-    <div className={`absolute z-20 top-0 ${isOpen ? 'flex' : 'hidden'} flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full h-[700px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6`}>
+    <div className={`absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full h-[700px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6`}>
       <div className='flex justify-between h-[50%] w-full'>
         <div className='w-[50%] h-[325px]'>
           <CpuUsageChart cpuData={cpuData} labels={labels}/>
@@ -170,8 +169,11 @@ const Details = ({setPopup,isOpen}:{setPopup:(type:string)=>void,isOpen:boolean}
         <div className='w-[32%]'>
           <div className='h-full w-full bg-black rounded-[10px] px-4 py-2'>
             <h1 className='text-end text-white text-sm font-medium'>Error Logs</h1>
-            <div className='h-[90%] w-full flex items-end overflow-auto'>
-              {errorsList.current.map((each:Errors,index:number)=><h1 key={index} className='text-end text-white text-sm font-medium'>{each.time} {serverDetails.connectivityMedium}: {each.error}</h1>)}
+            <div className='h-[90%] w-full flex items-end overflow-auto flex-col'>
+              {errorsList.current.map((each:Errors,index:number)=>
+               <div key={index} className='w-full flex justify-between'><p className='text-white text-sm font-medium'>{each.time}</p>
+               <p className='text-white text-sm font-medium'>{serverDetails.connectivityMedium}: {each.error}</p>
+               </div>)}
             </div>
           </div>
         </div>

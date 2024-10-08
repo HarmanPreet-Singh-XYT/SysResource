@@ -69,7 +69,7 @@ const Home = () => {
         {popup.alerts && <Alerts setPopup={setPopupType}/>}
         {(popup.error && !closedError) && <Error setPopup={setPopupType} setClosedError={setClosedError}/>}
         {popup.thresholdError && <ThresholdError setPopup={setPopupType} setClosedError={setClosedError}/>}
-        <Details setPopup={setPopupType} isOpen={popup.details}/>
+        {popup.details && <Details setPopup={setPopupType}/>}
         <div className='flex justify-center xl:justify-between h-[85%]'>
           <div className='hidden xl:flex xl:flex-col xl:justify-between'>
             <Groups/>

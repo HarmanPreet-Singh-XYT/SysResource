@@ -58,6 +58,7 @@ interface DataContextProps {
   selectedServerID: number;
   setupData: (data: Data[]) => void;
   addData: (newData: Data) => void;
+  setErrors: (set:Errors[]) => void;
   updateData: (index: number, updatedData: Data) => void;
   removeData: (index: number) => void;
   setupGroup: (groups:Group[]) => void;
@@ -70,6 +71,7 @@ interface DataContextProps {
   setLibrary: (lib:any) => void;
   setDataLoaded: (bool:boolean) => void;
   setserverSystemInfo:(serverSystemInfo:serverSystemInfo[]) => void;
+  updateErrors:(newError: { id: number; error: string | null }) => void;
 }
 
 // Create a Context with a default value
@@ -88,11 +90,29 @@ interface serverSystemInfo{
   id: number;
   serverInfo:SystemInfo;
 }
+const formatCurrentTime = () => {
+  const now = new Date();
+
+  const formattedDate = now.toLocaleDateString('en-US', {
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+  });
+
+  const formattedTime = now.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+  });
+
+  return `${formattedDate} - ${formattedTime}`;
+};
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [data, setData] = useState<Data[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   // eslint-disable-next-line prefer-const
-  const errors:Errors[] = [];
+  const [errors, setErrors] = useState<Errors[]>([]);
   const [serverSystemInfo, setserverSystemInfo] = useState<serverSystemInfo[]>([]);
   const [selectedGroupID, setselectedGroupID] = useState(0);
   const [selectedServerID, setselectedServerID] = useState(0);
@@ -140,9 +160,40 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const setDataLoaded = (bool:boolean)=>{
     setdataLoaded(bool);
   }
+  const updateErrors = (newError: { id: number; error: string | null }) => {
+    setErrors((prevErrors) => {
+      const updatedErrors = prevErrors.map((errorItem) => {
+        if (errorItem.id === newError.id) {
+          return {
+            ...errorItem,
+            errors: [
+              ...errorItem.errors,
+              {
+                time: formatCurrentTime(),
+                error: newError.error !== null ? newError.error : 'Fetch Error'
+              }
+            ]
+          };
+        }
+        return errorItem;
+      });
 
+      // If the error.id doesn't exist, add a new error item
+      if (!prevErrors.some((errorItem) => errorItem.id === newError.id)) {
+        updatedErrors.push({
+          id: newError.id,
+          errors: [{
+            time: formatCurrentTime(),
+            error: newError.error !== null ? newError.error : 'Fetch Error'
+          }]
+        });
+      }
+
+      return updatedErrors;
+    });
+  };
   return (
-    <DataContext.Provider value={{ data,groups,lib,dataLoaded,serverSystemInfo, errors,setLibrary,setserverSystemInfo,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
+    <DataContext.Provider value={{ data,groups,lib,dataLoaded,serverSystemInfo, errors, setErrors,updateErrors,setLibrary,setserverSystemInfo,selectedGroupID,selectedServerID,setupData, addData, updateData, removeData,setupGroup,addGroup,updateGroup,removeGroup,setGroupID,setServerID,setDataLoaded }}>
       {children}
     </DataContext.Provider>
   );

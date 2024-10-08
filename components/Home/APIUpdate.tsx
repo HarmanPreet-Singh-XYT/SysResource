@@ -4,26 +4,9 @@ import { useThreshold } from '@/helpers/Alerts';
 import { useData } from '@/helpers/Data'
 import { useSettings } from '@/helpers/Settings';
 import React, { useEffect, useRef } from 'react'
-const formatCurrentTime = () => {
-    const now = new Date();
 
-    const formattedDate = now.toLocaleDateString('en-US', {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit',
-    });
-
-    const formattedTime = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-    });
-
-    return `${formattedDate} - ${formattedTime}`;
-};
 const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
-    const {dataLoaded, data, updateData,errors,setserverSystemInfo,serverSystemInfo} = useData();
+    const {dataLoaded, data, updateData,updateErrors,setserverSystemInfo,serverSystemInfo} = useData();
     const APITries = useRef(0);
     const {cpuThreshold,memoryThreshold,customAlert,alertsEnabled,serverDown} = useThreshold();
     const {apiInterval, maxAPIFailure} = useSettings();
@@ -69,7 +52,7 @@ const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
                             }
                         }
                     }else{
-                        errors.map((error)=>error.id===each.id && error.errors.push({time:formatCurrentTime(),error:APIRes.error!==null ? APIRes.error : 'Fetch Error'}));
+                        updateErrors({id:each.id,error:APIRes.error!==null ? APIRes.error : 'Fetch Error'});
                         if(APITries.current<maxAPIFailure){
                             APITries.current++;
                         }else{
