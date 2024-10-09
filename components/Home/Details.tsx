@@ -118,25 +118,25 @@ const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
       ]);
   }, [data])
   return (
-    <div className={`absolute z-20 top-0 flex flex-col gap-2 left-0 right-0 bottom-0 self-center mx-auto w-full h-[700px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6`}>
-      <div className='flex justify-between h-[50%] w-full'>
-        <div className='w-[50%] h-[325px]'>
+    <div className={`absolute z-20 top-0 flex flex-col gap-2 overflow-auto lg:overflow-visible left-0 right-0 bottom-0 self-center mx-auto w-full h-full lg:h-[720px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6`}>
+      <div className='flex lg:flex-row flex-col justify-between lg:h-[50%] w-full'>
+        <div className='w-full lg:w-[50%] h-[325px]'>
           <CpuUsageChart cpuData={cpuData} labels={labels}/>
         </div>
-        <div className='w-[50%] h-[325px]'>
+        <div className='w-full lg:w-[50%] h-[325px]'>
           <MemoryUsageChart memoryData={memoryData} labels={memLabels} maxValue={dynamicServerDetails.current.totalMemory}/>
         </div>
       </div>
-      <div className='flex h-[50%] w-full justify-between'>
-        <div className='flex flex-col w-[40%] justify-between'>
-          <div className='h-[48%] w-full rounded-[10px] px-4 justify-evenly flex flex-col border-[1px] border-black'>
+      <div className='flex gap-2 lg:gap-0 lg:flex-row flex-col h-[50%] w-full justify-between'>
+        <div className='flex flex-col gap-2 w-full lg:w-[40%] justify-between'>
+          <div className='py-2 lg:py-0 lg:h-[48%] w-full rounded-[10px] px-4 justify-evenly flex flex-col border-[1px] border-black'>
             <p className='text-sm font-medium'>Processor - {serverDetails.cpu}</p>
             <p className='text-sm font-medium'>Architecture - {serverDetails.architecture}</p>
             <p className='text-sm font-medium'>CPU Cores - {serverDetails.cpuCore}</p>
             <p className='text-sm font-medium'>Machine - {serverDetails.machine}</p>
             <p className='text-sm font-medium'>Uptime - {dynamicServerDetails.current.uptime}</p>
           </div>
-          <div className='h-[48%] w-full rounded-[10px] border-[1px] px-4 border-black flex justify-between'>
+          <div className='py-2 lg:py-0 lg:h-[48%] w-full rounded-[10px] border-[1px] px-4 border-black flex justify-between'>
             <div className='flex flex-col justify-evenly'>
               <p className='text-sm font-medium'>Environment - {serverDetails.environment}</p>
               <p className='text-sm font-medium'>Hostname - {serverDetails.hostname}</p>
@@ -151,7 +151,7 @@ const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
             </div>
           </div>
         </div>
-        <div className='w-[25%]'>
+        <div className='w-full lg:w-[25%]'>
           <div className='h-full w-full bg-white border-[1px] border-black rounded-[10px] px-4 py-2'>
             <div className='flex flex-col justify-evenly h-full'>
               <p className='text-sm font-medium'>Name - {serverDetails.name}</p>
@@ -166,10 +166,10 @@ const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
             </div>
           </div>
         </div>
-        <div className='w-[32%]'>
+        <div className='w-full lg:w-[32%] pb-2 lg:pb-0'>
           <div className='h-full w-full bg-black rounded-[10px] px-4 py-2'>
             <h1 className='text-end text-white text-sm font-medium'>Error Logs</h1>
-            <div className='h-[90%] w-full flex items-end overflow-auto flex-col'>
+            <div className='h-[200px] lg:h-[90%] w-full flex items-end overflow-auto flex-col'>
               {errorsList.current.map((each:Errors,index:number)=>
                <div key={index} className='w-full'><p className='text-white text-sm font-medium'>{each.time}</p>
                <p className='text-white text-sm font-medium'>-{serverDetails.connectivityMedium}: {each.error}</p>
@@ -177,8 +177,9 @@ const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
             </div>
           </div>
         </div>
+        <button onClick={()=>setPopup('close')} className='bg-black w-[100px] h-[35px] lg:hidden text-white rounded-[10px] self-center text-sm font-medium hover:bg-white hover:text-black hover:border-[1px] hover:border-black py-2'>Close</button>
       </div>
-      <button onClick={()=>setPopup('close')} className='bg-black w-[100px] h-[35px] text-white rounded-[10px] self-center text-sm font-medium hover:bg-white hover:text-black hover:border-[1px] hover:border-black'>Close</button>
+      <button onClick={()=>setPopup('close')} className='bg-black lg:block hidden w-[100px] h-[35px] text-white rounded-[10px] self-center text-sm font-medium hover:bg-white hover:text-black hover:border-[1px] hover:border-black py-2'>Close</button>
     </div>
   )
 }
