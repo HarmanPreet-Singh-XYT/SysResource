@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SysResource
 
-## Getting Started
+**SysResource** is a powerful system resource monitoring tool that allows you to track server performance metrics such as CPU usage, memory utilization, and uptime. It provides detailed information about server hardware and software configurations, with a user-friendly interface that includes real-time charts and sound alerts for system thresholds and server downtime. It supports WebSocket and API integrations, offering flexible options for monitoring multiple servers.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Server Monitoring**: Monitor CPU, memory, uptime, hostname, CPU cores, total memory, free memory, platform, type, architecture, environment, and more.
+- **Charts**: Real-time line chart representations for CPU and memory usage.
+- **Grouping**: Organize servers into groups for better management and separation.
+- **Alerts**: Sound notifications when a server goes down or resource usage surpasses thresholds.
+- **WebSocket & API**: Two options to monitor resources – via WebSocket or API.
+- **Settings**: Configure API interval, max retries, and store settings in local storage.
+- **Documentation**: Comprehensive documentation to help you get started.
+  
+## Installation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   git clone https://github.com/HarmanPreet-Singh-XYT/SysResource.git
+   cd SysResource
+    ```
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
+3. Start the application:
+    ```bash
+    npm start
+    ```
+## Usage
+After installation, open the application in your browser. You'll be able to:
+- Monitor system resources such as CPU and memory in real-time.
+- Group servers based on different criteria.
+- Set custom API intervals and max retry attempts, stored in local storage.
+- Use WebSocket or REST API to fetch system data.
+- Receive sound alerts when servers go down or resources exceed configured thresholds.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Documentation
+Sysresource exposes several APIs to fetch server data. Below is an example of how to use the API:
+- **Get Server Data**:
+    ```bash
+    GET /sysresource
+    ```
+- **Response**
+    ```bash
+    {
+    "hostname": "DESKTOP-S283TVV",
+    "cpuUsage": 34,
+    "cpu": "Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz",
+    "cpuCore": 8,
+    "totalMemory": 17108,
+    "freeMemory": 4767,
+    "release": "10.0.19045",
+    "platform": "win32",
+    "uptime": 2925,
+    "type": "Windows_NT",
+    "machine": "x86_64",
+    "architecture": "x64",
+    "environment": "NodeJS"
+    }
+    ```
+For complete API documentation, visit [API Docs](https://sysresource.vercel.app/docs)
 
-## Learn More
+## Settings
+You can configure several settings for sysresource:
+- **API Interval:** Set the interval for API requests.
+- **Max Retries:** Define the maximum number of retries for failed API requests.
+- **Local Storage:** All settings are stored locally for persistence.
 
-To learn more about Next.js, take a look at the following resources:
+# Contributing
+Contributions are welcome! Please follow these steps to contribute:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Fork the repository.**
+2. **Create a new branch (git checkout -b feature-branch).**
+3. **Commit your changes (git commit -m 'Add feature').**
+4. **Push to the branch (git push origin feature-branch).**
+5. **Open a pull request.**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# License
+**This project is licensed under the MIT License – see the LICENSE file for details.**
