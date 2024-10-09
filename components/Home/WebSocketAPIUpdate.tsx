@@ -180,10 +180,12 @@ const WebSocketAPIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
 
         return () => {
             // Clean up and close WebSocket connections when the component unmounts
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             Object.values(socketRefs.current).forEach((socket) => {
                 socket.close();
             });
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataLoaded]);
 
     return <></>;

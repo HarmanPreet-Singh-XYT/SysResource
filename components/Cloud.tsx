@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const Cloud = () => {
     const [loading, setloading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const notify = async (e:any)=>{
       e.preventDefault();
       const email = e.target.email.value;

@@ -81,6 +81,7 @@ const APIUpdate = ({setPopup}:{setPopup:(text:string)=>void}) => {
       return () => {
         clearInterval(intervalId);
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dataLoaded,apiInterval]);
     
   return (
