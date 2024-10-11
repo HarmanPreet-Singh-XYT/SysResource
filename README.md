@@ -26,7 +26,7 @@
     ```
 3. Start the application:
     ```bash
-    npm start
+    npm run dev
     ```
 ## Usage
 After installation, open the application in your browser. You'll be able to:
