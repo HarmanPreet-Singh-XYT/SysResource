@@ -105,17 +105,23 @@ const Details = ({setPopup}:{setPopup:(type:string)=>void}) => {
     }
     const newCpuUsage = dynamicServerDetails.current.cpuUsage; // Mock CPU usage value
     setCpuData((prevData) => [...prevData.slice(1), newCpuUsage]);
-    setLabels((prevLabels) => [
-      ...prevLabels.slice(1),
-      `${parseInt(prevLabels[prevLabels.length - 1]) + 1}`
-    ]);
+    const currentTime = new Date();
+    const formattedTime = `${currentTime.getHours().toString().padStart(2, '0')}:${currentTime.getMinutes().toString().padStart(2, '0')}:${currentTime.getSeconds().toString().padStart(2, '0')}`;    
+    setLabels((prevLabels) => {
+      return [
+        ...prevLabels.slice(1),
+        formattedTime
+      ];
+    });
     // memory updates
     const newMemoryUsage = dynamicServerDetails.current.usedMemory; // Mock Memory usage value in MB
       setMemoryData((prevData) => [...prevData.slice(1), newMemoryUsage]);
-      setMemLabels((prevLabels) => [
-        ...prevLabels.slice(1),
-        `${parseInt(prevLabels[prevLabels.length - 1]) + 1}`
-      ]);
+      setMemLabels((prevLabels) => {
+        return [
+          ...prevLabels.slice(1),  // Remove the first label
+          formattedTime            // Add the current time as the new label
+        ];
+      });
   }, [data])
   return (
     <div className={`absolute z-20 top-0 flex flex-col gap-2 overflow-auto lg:overflow-visible left-0 right-0 bottom-0 self-center mx-auto w-full h-full lg:h-[720px] bg-white border-[1px] border-[#CCCCCC] rounded-[10px] py-6 shadow-lg px-6`}>
